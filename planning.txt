@@ -1,0 +1,28 @@
+The Annoying Project Mr. Pete Had Us Do (TAPMPHUD) SYLLABUS MANAGER
+
+Format: Dictionaries and lists
+units = {
+    'Unit name': { # unit content
+        'Topic name': {
+            'vocab': {
+                'Vocab term': {
+                    'definition': '',
+                    'notes': [],
+                },
+                'Another vocab term': {
+                    'definition': '',
+                    'notes': [],
+                }
+            },
+            'notes': [ # group relevant information together
+                "The sky is red",
+                " - Do not question it",
+                "2+2=5",
+            ]
+        }
+    },
+}
+
+Functions
+Writing syllabus to file (and parsing it)
+
