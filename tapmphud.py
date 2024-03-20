@@ -18,7 +18,7 @@ add-vterm [term name] - add vocabulary term w/ def & notes (at working directory
 *add-ncard (asks for user input) - add a notecard (at working directory's topic) 
 *add-topic [topic name] - add a topic (at working directory's unit)
 setkey [key/index] (asks for user input) - replace content at key or index with user input
-*del-element [element name] - delete key/dict/str. can be a unit, topic, 
+*del [element name] - delete any key/dict/str. can be a unit, topic, vocab term, note, etc.
 
 *write-file [filename] - Write current syllabus to the specified file
 *load-file [filename] - Load syllabus from specified file""" # * = NOT IMPLEMENTED
@@ -76,7 +76,9 @@ def resolve_wd():
 
 def resolve_dir(str):
     selected = syllabus
-    for i, v in enumerate(str.split('>')):
+    # discard first '>' to avoid first split being ""
+    strx = str.removeprefix(">")
+    for i, v in enumerate(strx.split('>')):
         if v in selected:
             selected = selected[v]
         else:
@@ -87,7 +89,7 @@ def resolve_dir(str):
 # use working dir's topic
 def add_vocab(vocab, definition, notes):
     #                 unit>topic
-    elements = working_dir.split('>')
+    elements = working_dir.removeprefix(">").split('>')
     topic = syllabus[elements[0]][elements[1]]
     topic['vocab'][vocab] = {
             'definition': definition,
@@ -101,6 +103,16 @@ def add_ncard(note_str):
 # use working dir's unit
 def add_topic(topic_name: str):
     pass
+
+def del_elem(element: str):
+    global working_dir
+    dir = resolve_wd();
+    if element in dir:
+        print(f"Deleting {element} in {working_dir}")
+        del dir[element]
+    else:
+        print("Element not found")
+
 
 # select and "enter" element from working directory
 def wd_into(element: str):
@@ -116,14 +128,15 @@ def wd_into(element: str):
 def wd_outof():
     global working_dir # tell interpreter working_dir is global
 
-    elements = working_dir.split('>')
-    if len(elements) < 2:
-        print("Cannot get out of " + elements[0])
-        return
+    wd_x = working_dir.removeprefix(">") # discard first > to avoid empty first string in split
+    elements = wd_x.split('>')
+    # if len(elements) < 2: # Units can now be exited
+    #     print("Cannot get out of " + elements[0])
+    #     return
     del elements[len(elements) - 1]
     working_dir = ""
     for i,v in enumerate(elements):
-        # if i > 0: # now working directory sstarts with >
+        # if i > 0: # now working directory starts with >
         working_dir += ">"+v
 
 # concatenates all but first token with spaces in between
@@ -223,6 +236,7 @@ def main():
                     selected = resolve_wd()
                 else:
                     selected = resolve_dir(working_dir + ">" + join_tokens(args))
+
                 if isinstance(selected, dict):
                     show(selected.keys())
                 elif isinstance(selected, list):
@@ -254,7 +268,10 @@ def main():
 
             case 'into':
                 wd_into(join_tokens(args))
-                
+
+            case 'del':
+                del_elem(join_tokens(args))
+
             case _:
                 print("Invalid command: " + args[0])
 
