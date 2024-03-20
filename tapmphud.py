@@ -18,6 +18,7 @@ add-vterm [term name] - add vocabulary term w/ def & notes (at working directory
 *add-ncard (asks for user input) - add a notecard (at working directory's topic) 
 *add-topic [topic name] - add a topic (at working directory's unit)
 setkey [key/index] (asks for user input) - replace content at key or index with user input
+*del-element [element name] - delete key/dict/str. can be a unit, topic, 
 
 *write-file [filename] - Write current syllabus to the specified file
 *load-file [filename] - Load syllabus from specified file""" # * = NOT IMPLEMENTED
@@ -65,8 +66,8 @@ syllabus = {
 }
 
 # print(syllabus['7 Cities']['1 Orig Dist Sys Cities']['notes'][1])
-#              Unit    >Topic
-working_dir = "7 Cities>1 Orig Dist Sys Cities"
+#              >Unit    >Topic
+working_dir = ">7 Cities>1 Orig Dist Sys Cities"
 
 # returns the selected object
 # e.g. syllabus['7 Cities']
@@ -122,9 +123,8 @@ def wd_outof():
     del elements[len(elements) - 1]
     working_dir = ""
     for i,v in enumerate(elements):
-        if i > 0:
-            working_dir += ">"
-        working_dir += v
+        # if i > 0: # now working directory sstarts with >
+        working_dir += ">"+v
 
 # concatenates all but first token with spaces in between
 def join_tokens(args):
@@ -205,7 +205,8 @@ def main():
     running = True
     print("Welcome to the TAPMPHUD Syllabus Manager")
     while running: # while program should run
-        uinput = input(working_dir + " $ ") # Get user input with the prompt
+        # color all >'s grey with terminal color escape sequence (0m to reset color)
+        uinput = input(working_dir.replace('>', '\033[37m>\033[0m', -1) + "\033[37m$\033[0m ") # Get user input with the prompt
         args = uinput.split() # Arguments (split by words)
         argc = len(args) # number of elements
         match args[0]: # First token is command
