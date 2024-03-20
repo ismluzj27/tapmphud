@@ -55,6 +55,16 @@ def resolve_wd():
     global working_dir
     selected = syllabus
     for i,v in enumerate(working_dir.split('>')):
+        if v in selected:
+            selected = selected[v]
+        else:
+            print(f"Element {v} not found-- stopping")
+            return selected
+    return selected
+
+def resolve_dir(str):
+    selected = syllabus
+    for i,v in enumerate(str.split('>')):
         selected = selected[v]
     return selected
 
@@ -135,6 +145,10 @@ def setkey(keyorindex):
 def show(element):
     # element can vary in type
     # todo: implement printing format for list, dict, and str
+    # e.g.
+    # Urbanization [dict]:
+    #  * definition [str]
+    #  * notes [str]
     print(element)
 
 def main():
@@ -152,9 +166,11 @@ def main():
             case 'outof':
                 wd_outof()
             case 'ls':
-                selected = resolve_wd()
+                if argc == 1:
+                    selected = resolve_wd()
+                else:
+                    selected = resolve_dir(working_dir + ">" + join_tokens(args))
                 if isinstance(selected, dict):
-                    # todo: print prettier
                     show(selected.keys())
                 elif isinstance(selected, list):
                     show(selected)
