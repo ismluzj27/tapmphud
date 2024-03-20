@@ -2,6 +2,7 @@
 # "ta-pum-fud"
 
 from sys import stdin
+import re 
 
 help = """exit - exit
 help - list commands
@@ -13,7 +14,7 @@ read [key OR index] - print the value of a key/at index of list
 into [element] - select an element in current working directory
 outof - go up in the working directory into broader element
 
-*add-vterm [term name] - add vocabulary term w/ def & notes (at working directory's topic)
+add-vterm [term name] - add vocabulary term w/ def & notes (at working directory's topic)
 *add-ncard (asks for user input) - add a notecard (at working directory's topic) 
 *add-topic [topic name] - add a topic (at working directory's unit)
 setkey [key/index] (asks for user input) - replace content at key or index with user input
@@ -84,7 +85,13 @@ def resolve_dir(str):
 
 # use working dir's topic
 def add_vocab(vocab, definition, notes):
-    topic = resolve_wd()
+    #                 unit>topic
+    elements = working_dir.split('>')
+    topic = syllabus[elements[0]][elements[1]]
+    topic['vocab'][vocab] = {
+            'definition': definition,
+            'notes': notes
+        }
 
 # use working dir's topic
 def add_ncard(note_str):
@@ -119,6 +126,7 @@ def wd_outof():
             working_dir += ">"
         working_dir += v
 
+# concatenates all but first token with spaces in between
 def join_tokens(args):
     element_str = ""
     for i,v in enumerate(args):
@@ -150,8 +158,8 @@ def setkey(keyorindex):
             print("WARNING: current value to be replaced has more nested information ")
 
         inputstr = rawinput(f"Writing to key {keyorindex}"
-                            + "\n--- Leave blank to cancel ---\n---  CTRL+D (^D) to stop  ---"
-                            + "\n--- Or, type EOF to stop  ---")
+                            + "\n--- Leave blank to cancel ---\n"
+                            + "\n---   Type EOF to stop    ---")
         if inputstr == None or inputstr == '':
             print("Cancelling")
             return
@@ -166,8 +174,8 @@ def setkey(keyorindex):
             return
 
         inputstr = rawinput(f"Writing to index {index} of {len(selected_obj)}"
-                            + "\n--- Leave blank to cancel ---\n---  CTRL+D (^D) to stop  ---"
-                            + "\n--- Or, type EOF to stop  ---")
+                            + "\n--- Leave blank to cancel ---\n"
+                            + "\n---   Type EOF to stop    ---")
         if inputstr == None or inputstr == '':
             print("Cancelling")
             return
@@ -235,6 +243,13 @@ def main():
 
             case 'setkey':
                 setkey(join_tokens(args))
+
+            case 'add-vterm':
+                if argc < 2: # only 'add-vterm'
+                    print("Improper usage- needs term name")
+                definition = rawinput("--- Writing definition (type EOF to finish) ---")
+                notes      = rawinput("--- Writing notes (type EOF to finish) ---")
+                add_vocab(join_tokens(args), definition.strip(), notes.strip())
 
             case 'into':
                 wd_into(join_tokens(args))
