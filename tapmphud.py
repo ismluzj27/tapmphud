@@ -158,7 +158,7 @@ def setkey(keyorindex):
             print("WARNING: current value to be replaced has more nested information ")
 
         inputstr = rawinput(f"Writing to key {keyorindex}"
-                            + "\n--- Leave blank to cancel ---\n"
+                            + "\n--- Leave blank to cancel ---"
                             + "\n---   Type EOF to stop    ---")
         if inputstr == None or inputstr == '':
             print("Cancelling")
@@ -174,7 +174,7 @@ def setkey(keyorindex):
             return
 
         inputstr = rawinput(f"Writing to index {index} of {len(selected_obj)}"
-                            + "\n--- Leave blank to cancel ---\n"
+                            + "\n--- Leave blank to cancel ---"
                             + "\n---   Type EOF to stop    ---")
         if inputstr == None or inputstr == '':
             print("Cancelling")
