@@ -51,7 +51,7 @@ working_dir = "7 Cities>1 Orig Dist Sys Cities"
 
 # returns the selected object
 # e.g. syllabus['7 Cities']
-def resolve_working_dir():
+def resolve_wd():
     global working_dir
     selected = syllabus
     for i,v in enumerate(working_dir.split('>')):
@@ -72,10 +72,9 @@ def add_topic(topic_name: str):
 
 # select and "enter" element from working directory
 def wd_into(element: str):
-    print
     global working_dir
-    if element in resolve_working_dir():
-        if isinstance(resolve_working_dir()[element], (list, dict)):
+    if element in resolve_wd():
+        if isinstance(resolve_wd()[element], (list, dict)):
             working_dir += ">" + element
         else:
             print("Element is not a list or dictionary")
@@ -87,9 +86,9 @@ def wd_outof():
 
     elements = working_dir.split('>')
     if len(elements) < 2:
-        print("Cannot get out of "+elements[0])
+        print("Cannot get out of " + elements[0])
         return
-    del elements[len(elements) -1]
+    del elements[len(elements) - 1]
     working_dir = ""
     for i,v in enumerate(elements):
         if i > 0:
@@ -111,17 +110,19 @@ def rawinput(prompt):
     str_ = ""
     for line in stdin:
         str_ += line # line includes trailing \n
+    return str_
 
 def setkey(keyorindex):
     global working_directory
-    selected_obj = resolve_working_dir()
+    selected_obj = resolve_wd()
     if isinstance(selected_obj, dict):
         if not keyorindex in selected_obj:
             print("WARNING: making new key, structure may be compromised")
         if keyorindex in selected_obj and isinstance(selected_obj[keyorindex], (list, dict)):
             print("WARNING: current value to be replaced has more nested information ")
 
-        inputstr = rawinput(f"--- Writing to key {keyorindex} ---\n--- Leave blank to cancel ---\n---  CTRL+D (^D) to stop  ---")
+        inputstr = rawinput(f"--- Writing to key {keyorindex} ---"
+                            + "\n--- Leave blank to cancel ---\n---  CTRL+D (^D) to stop  ---")
         if inputstr == None or inputstr == '':
             print("Cancelling")
         else:
@@ -151,7 +152,7 @@ def main():
             case 'outof':
                 wd_outof()
             case 'ls':
-                selected = resolve_working_dir()
+                selected = resolve_wd()
                 if isinstance(selected, dict):
                     # todo: print prettier
                     show(selected.keys())
@@ -165,10 +166,10 @@ def main():
                 input_str = join_tokens(args)
                 if input_str == '':
                     print("Invalid command usage: needs key")
-                if input_str.isnumeric() and isinstance(resolve_working_dir(), list):
-                    selected = resolve_working_dir()[int(input_str)]
+                if input_str.isnumeric() and isinstance(resolve_wd(), list):
+                    selected = resolve_wd()[int(input_str)]
                 else:
-                    selected = resolve_working_dir()[input_str] if input_str in resolve_working_dir() else "Key not found"
+                    selected = resolve_wd()[input_str] if input_str in resolve_wd() else "Key not found"
                 
                 show(selected) # todo: print prettier
 
