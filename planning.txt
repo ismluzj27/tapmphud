@@ -30,18 +30,3 @@ Add/remove notecards
 Select and navigate the syllabus
   (have something like a working directory?)
   e.g. 7 Cities -> 1 Orig... $
-
-  exit - exit
-  help - list commands
-
-  pwd - print working directory
-  ls - list all elements in working directory
-  ls [element] - list all elements in specified list/dictionary
-  read [key OR index] - print the value of a key/at index of list
-  into [element] - select an element in current working directory
-  outof - go up in the working directory into broader element
-
-  add-vterm [term name] -  add vocabulary term w/ def & notes (at working directory's topic)
-  add-ncard (asks for user input) - add a notecard (at working directory's topic) 
-  add-topic [topic name] - add a topic (at working directory's unit)
-  setkey [key/index] (asks for user input) - replace content at key or index with user input 

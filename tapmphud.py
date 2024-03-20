@@ -3,6 +3,24 @@
 
 from sys import stdin
 
+help = """exit - exit
+help - list commands
+
+pwd - print working directory
+ls - list all elements in working directory
+ls [element] - list all elements in specified list/dictionary
+read [key OR index] - print the value of a key/at index of list
+into [element] - select an element in current working directory
+outof - go up in the working directory into broader element
+
+*add-vterm [term name] - add vocabulary term w/ def & notes (at working directory's topic)
+*add-ncard (asks for user input) - add a notecard (at working directory's topic) 
+*add-topic [topic name] - add a topic (at working directory's unit)
+setkey [key/index] (asks for user input) - replace content at key or index with user input
+
+*write-file [filename] - Write current syllabus to the specified file
+*load-file [filename] - Load syllabus from specified file""" # * = NOT IMPLEMENTED
+
 syllabus = {
     '7 Cities': { # unit
         '1 Orig Dist Sys Cities': { # topic
@@ -27,19 +45,19 @@ syllabus = {
             },
             'notecards': [ # group relevant information together
                 "Two main factors influence location of cities: site and situation",
-                    "Site and situation can also impact how cities function and grow\n"+
-                    " - Size of cities\n"+
-                    "   * Εxample: Manila has trouble growing because of physical constraints\n"+
-                    " - Economic development\n"+
-                    "   * Example: Singapore got very wealthy due to strategic position on shipping routes\n"+
-                    " - Political/military history\n"+
-                    "   * Example: Istanbul as a shatterbelt",
+                "Site and situation can also impact how cities function and grow\n"+
+                " - Size of cities\n"+
+                "   * Εxample: Manila has trouble growing because of physical constraints\n"+
+                " - Economic development\n"+
+                "   * Example: Singapore got very wealthy due to strategic position on shipping routes\n"+
+                " - Political/military history\n"+
+                "   * Example: Istanbul as a shatterbelt",
                 "Key trend around the world -- cities are getting larger\n"+
-                    "Causes\n"+
-                    " 1) Population growth\n"+
-                    "   * People need somewhere to live\n"+
-                    " 2) Improvements in transport and communication\n"+
-                    "   * Allows cities to expand -- just look at Manila",
+                "Causes\n"+
+                " 1) Population growth\n"+
+                "   * People need somewhere to live\n"+
+                " 2) Improvements in transport and communication\n"+
+                "   * Allows cities to expand -- just look at Manila",
             ]
         }
     }
@@ -66,7 +84,7 @@ def resolve_dir(str):
 
 # use working dir's topic
 def add_vocab(vocab, definition, notes):
-    pass
+    topic = resolve_wd()
 
 # use working dir's topic
 def add_ncard(note_str):
@@ -114,27 +132,50 @@ def join_tokens(args):
 def rawinput(prompt):
     print(prompt)
     str_ = ""
-    for line in stdin:
-        str_ += line # line includes trailing \n
-    return str_
+    try:
+        for line in stdin:
+            if line == "EOF\n":
+                return str_
+            str_ += line # line includes trailing \n
+
+    except EOFError:
+        return str_
 
 def setkey(keyorindex):
-    global working_directory
     selected_obj = resolve_wd()
-    if isinstance(selected_obj, dict):
+    if isinstance(selected_obj, dict): # dict
         if not keyorindex in selected_obj:
             print("WARNING: making new key, structure may be compromised")
         if keyorindex in selected_obj and isinstance(selected_obj[keyorindex], (list, dict)):
             print("WARNING: current value to be replaced has more nested information ")
 
-        inputstr = rawinput(f"--- Writing to key {keyorindex} ---"
-                            + "\n--- Leave blank to cancel ---\n---  CTRL+D (^D) to stop  ---")
+        inputstr = rawinput(f"Writing to key {keyorindex}"
+                            + "\n--- Leave blank to cancel ---\n---  CTRL+D (^D) to stop  ---"
+                            + "\n--- Or, type EOF to stop  ---")
         if inputstr == None or inputstr == '':
             print("Cancelling")
+            return
+        selected_obj[keyorindex] = inputstr
+    elif isinstance(selected_obj, list): # list
+        if not keyorindex.isnumeric():
+            print("non-number provided")
+            return
+        index = int(keyorindex)
+        if index < 0 or index > len(selected_obj):
+            print("invalid index")
+            return
+
+        inputstr = rawinput(f"Writing to index {index} of {len(selected_obj)}"
+                            + "\n--- Leave blank to cancel ---\n---  CTRL+D (^D) to stop  ---"
+                            + "\n--- Or, type EOF to stop  ---")
+        if inputstr == None or inputstr == '':
+            print("Cancelling")
+            return
+        if index == len(selected_obj): # index is just one higher than the greatest existing index
+            selected_obj.append(inputstr)
         else:
-            selected_obj[keyorindex] = inputstr
-    elif isinstance(selected_obj, list):
-        pass
+            selected_obj[index] = inputstr
+
     else:
         print("working directory is not at a list or dictionary")
 
@@ -143,9 +184,14 @@ def show(element):
     # todo: implement printing format for list, dict, and str
     # e.g.
     # Urbanization [dict]:
-    #  * definition [str]
-    #  * notes [str]
+    #  key definition [str]
+    #  key notes [str]
+    #
+    # notecards [list]:
+    #  [0] Two main f... [str]
+    #  [1] Site and s... [str]
     print(element)
+
 
 def main():
     running = True
@@ -157,6 +203,8 @@ def main():
         match args[0]: # First token is command
             case 'exit':
                 running = False
+            case 'help':
+                print(help)
             case 'pwd':
                 print(working_dir)
             case 'outof':
