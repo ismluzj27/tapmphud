@@ -52,20 +52,16 @@ working_dir = "7 Cities>1 Orig Dist Sys Cities"
 # returns the selected object
 # e.g. syllabus['7 Cities']
 def resolve_wd():
-    global working_dir
-    selected = syllabus
-    for i,v in enumerate(working_dir.split('>')):
-        if v in selected:
-            selected = selected[v]
-        else:
-            print(f"Element {v} not found-- stopping")
-            return selected
-    return selected
+    return resolve_dir(working_dir)
 
 def resolve_dir(str):
     selected = syllabus
-    for i,v in enumerate(str.split('>')):
-        selected = selected[v]
+    for i, v in enumerate(str.split('>')):
+        if v in selected:
+            selected = selected[v]
+        else:
+            print(f"Element {v} not found-- stopping resolve")
+            return selected
     return selected
 
 # use working dir's topic
