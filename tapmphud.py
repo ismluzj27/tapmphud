@@ -16,7 +16,7 @@ outof - go up in the working directory into broader element
 
 add-vterm [term name] - add vocabulary term w/ def & notes (at working directory's topic)
 add-ncard (asks for user input) - add a notecard (at working directory's topic) 
-*add-topic [topic name] - add a topic (at working directory's unit)
+add-topic [topic name] - add a topic (at working directory's unit)
 setkey [key/index] (asks for user input) - replace content at key or index with user input
 del [element name] - delete any key/dict/str. can be a unit, topic, vocab term, note, etc.
 
