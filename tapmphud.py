@@ -241,7 +241,16 @@ def show(element):
     # notecards [list]:
     #  [0] Two main f... [str]
     #  [1] Site and s... [str]
-    print(element)
+    if isinstance(element, list):
+        print(f"list:")
+        for i,v in enumerate(element):
+            print(f" [{i}] {v[0:10]}... [str]") # substring [start:end(not included]
+    elif isinstance(element, dict):
+        print(f"dict:")
+        for k,v in element.items():
+            print(f" key {k} [{type(v)}]")
+    else:
+        print(element)
 
 
 def main():
@@ -267,9 +276,7 @@ def main():
                 else:
                     selected = resolve_dir(working_dir + ">" + join_tokens(args))
 
-                if isinstance(selected, dict):
-                    show(selected.keys())
-                elif isinstance(selected, list):
+                if isinstance(selected, (dict, list)):
                     show(selected)
                 else:
                     print("!!!Working directory object invalid type!!!")
