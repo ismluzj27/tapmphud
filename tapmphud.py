@@ -98,6 +98,14 @@ def wd_get_topic():
         return
     return syllabus[elements[0]][elements[1]]
 
+def wd_get_unit():
+    global working_dir
+    elements = working_dir.removeprefix(">").split('>')
+    if len(elements) < 1:
+        print("Enter *into* a unit first")
+        return
+    return syllabus[elements[0]]
+
 # use working dir's topic
 def add_vocab(vocab, definition, notes):
     topic = wd_get_topic()
@@ -119,7 +127,14 @@ def add_ncard():
 
 # use working dir's unit
 def add_topic(topic_name: str):
-    pass
+    unit = wd_get_unit()
+    if topic_name in unit:
+        print("Warning: topic name already exists in unit. Aborting")
+        return
+    unit[topic_name] = {
+        'vocab': {},
+        'notecards': []
+    }
 
 def del_elem(element: str):
     global working_dir
@@ -287,6 +302,9 @@ def main():
 
             case 'add-ncard':
                 add_ncard()
+
+            case 'add-topic':
+                add_topic(join_tokens(args))
 
             case 'into':
                 wd_into(join_tokens(args))
