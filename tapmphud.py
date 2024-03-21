@@ -15,7 +15,7 @@ into [element] - select an element in current working directory
 outof - go up in the working directory into broader element
 
 add-vterm [term name] - add vocabulary term w/ def & notes (at working directory's topic)
-*add-ncard (asks for user input) - add a notecard (at working directory's topic) 
+add-ncard (asks for user input) - add a notecard (at working directory's topic) 
 *add-topic [topic name] - add a topic (at working directory's unit)
 setkey [key/index] (asks for user input) - replace content at key or index with user input
 del [element name] - delete any key/dict/str. can be a unit, topic, vocab term, note, etc.
@@ -46,20 +46,20 @@ syllabus = {
                 }
             },
             'notecards': [ # group relevant information together
-                "Two main factors influence location of cities: site and situation",
+                "Two main factors influence location of cities: site and situation", # 0
                 "Site and situation can also impact how cities function and grow\n"+
                 " - Size of cities\n"+
                 "   * Εxample: Manila has trouble growing because of physical constraints\n"+
                 " - Economic development\n"+
                 "   * Example: Singapore got very wealthy due to strategic position on shipping routes\n"+
                 " - Political/military history\n"+
-                "   * Example: Istanbul as a shatterbelt",
+                "   * Example: Istanbul as a shatterbelt", # 1
                 "Key trend around the world -- cities are getting larger\n"+
                 "Causes\n"+
                 " 1) Population growth\n"+
                 "   * People need somewhere to live\n"+
                 " 2) Improvements in transport and communication\n"+
-                "   * Allows cities to expand -- just look at Manila",
+                "   * Allows cities to expand -- just look at Manila", # 2
             ]
         }
     }
@@ -68,6 +68,9 @@ syllabus = {
 # print(syllabus['7 Cities']['1 Orig Dist Sys Cities']['notes'][1])
 #              >Unit    >Topic
 working_dir = ">7 Cities>1 Orig Dist Sys Cities"
+raw_input_prompt = """
+--- Leave blank to cancel ---
+---   Type EOF to stop    ---"""
 
 # returns the selected object
 # e.g. syllabus['7 Cities']
@@ -86,19 +89,33 @@ def resolve_dir(str):
             return selected
     return selected
 
+def wd_get_topic():
+    global working_dir
+    # >unit>topic
+    elements = working_dir.removeprefix(">").split('>')
+    if len(elements) < 2:
+        print("Enter *into* a topic first")
+        return
+    return syllabus[elements[0]][elements[1]]
+
 # use working dir's topic
 def add_vocab(vocab, definition, notes):
-    #                 unit>topic
-    elements = working_dir.removeprefix(">").split('>')
-    topic = syllabus[elements[0]][elements[1]]
+    topic = wd_get_topic()
+    if topic == None:
+        return
     topic['vocab'][vocab] = {
             'definition': definition,
             'notes': notes
         }
 
 # use working dir's topic
-def add_ncard(note_str):
-    pass
+def add_ncard():
+    topic = wd_get_topic()
+    if topic == None:
+        return
+    input = rawinput("Writing a new note"+raw_input_prompt)
+    if not input == '':
+        topic['notecards'].append(input)
 
 # use working dir's unit
 def add_topic(topic_name: str):
@@ -107,7 +124,9 @@ def add_topic(topic_name: str):
 def del_elem(element: str):
     global working_dir
     dir = resolve_wd();
-    if element in dir:
+    if element.isnumeric() and isinstance(dir, list):
+        element = int(element) # convert to index if dir is a list
+    if (element in dir) if isinstance(dir, dict) else (element >= 0 and element < len(dir)):
         print(f"Deleting {element} in {working_dir}")
         del dir[element]
     else:
@@ -170,9 +189,7 @@ def setkey(keyorindex):
         if keyorindex in selected_obj and isinstance(selected_obj[keyorindex], (list, dict)):
             print("WARNING: current value to be replaced has more nested information ")
 
-        inputstr = rawinput(f"Writing to key {keyorindex}"
-                            + "\n--- Leave blank to cancel ---"
-                            + "\n---   Type EOF to stop    ---")
+        inputstr = rawinput(f"Writing to key {keyorindex}"+raw_input_prompt)
         if inputstr == None or inputstr == '':
             print("Cancelling")
             return
@@ -186,9 +203,7 @@ def setkey(keyorindex):
             print("invalid index")
             return
 
-        inputstr = rawinput(f"Writing to index {index} of {len(selected_obj)}"
-                            + "\n--- Leave blank to cancel ---"
-                            + "\n---   Type EOF to stop    ---")
+        inputstr = rawinput(f"Writing to index {index} of {len(selected_obj)}"+raw_input_prompt)
         if inputstr == None or inputstr == '':
             print("Cancelling")
             return
@@ -247,10 +262,14 @@ def main():
 
             case 'read':
                 input_str = join_tokens(args)
+                selected = None
                 if input_str == '':
                     print("Invalid command usage: needs key")
                 if input_str.isnumeric() and isinstance(resolve_wd(), list):
-                    selected = resolve_wd()[int(input_str)]
+                    if int(input_str) < 0 or int(input_str) >= len(resolve_wd()):
+                        print("Invalid index")
+                    else:
+                        selected = resolve_wd()[int(input_str)]
                 else:
                     selected = resolve_wd()[input_str] if input_str in resolve_wd() else "Key not found"
                 
@@ -265,6 +284,9 @@ def main():
                 definition = rawinput("--- Writing definition (type EOF to finish) ---")
                 notes      = rawinput("--- Writing notes (type EOF to finish) ---")
                 add_vocab(join_tokens(args), definition.strip(), notes.strip())
+
+            case 'add-ncard':
+                add_ncard()
 
             case 'into':
                 wd_into(join_tokens(args))
