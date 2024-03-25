@@ -2,7 +2,6 @@
 # "ta-pum-fud"
 
 from sys import stdin
-import re 
 
 help = """exit - exit
 help - list commands
@@ -21,11 +20,11 @@ setkey [key/index] (asks for user input) - replace content at key or index with 
 del [element name] - delete any key/dict/str. can be a unit, topic, vocab term, note, etc.
 
 *write-file [filename] - Write current syllabus to the specified file
-*load-file [filename] - Load syllabus from specified file""" # * = NOT IMPLEMENTED
+*load-file [filename] - Load syllabus from specified file"""  # * = NOT IMPLEMENTED
 
 syllabus = {
-    '7 Cities': { # unit
-        '1 Orig Dist Sys Cities': { # topic
+    '7 Cities': {  # unit
+        '1 Orig Dist Sys Cities': {  # topic
             'vocab': {
                 'Urbanization': {
                     'definition': 'the process of developing towns and cities',
@@ -33,33 +32,33 @@ syllabus = {
                 },
                 'Site': {
                     'definition': 'physical characteristics of a place',
-                    'notes': "includes:\n"+
-                        " - climate\n"+
-                        " - natural features, especially water"
+                    'notes': "includes:\n" +
+                    " - climate\n" +
+                    " - natural features, especially water"
                 },
                 'Situation': {
                     'definition': 'location of a place relative to surroundings',
                     'notes': "includes:\n"
-                        " - proximity to natural resources\n" +
-                        " - proximity to other cities\n" +
-                        " - accessibility"
+                    " - proximity to natural resources\n" +
+                    " - proximity to other cities\n" +
+                    " - accessibility"
                 }
             },
-            'notecards': [ # group relevant information together
-                "Two main factors influence location of cities: site and situation", # 0
-                "Site and situation can also impact how cities function and grow\n"+
-                " - Size of cities\n"+
-                "   * Εxample: Manila has trouble growing because of physical constraints\n"+
-                " - Economic development\n"+
-                "   * Example: Singapore got very wealthy due to strategic position on shipping routes\n"+
-                " - Political/military history\n"+
-                "   * Example: Istanbul as a shatterbelt", # 1
-                "Key trend around the world -- cities are getting larger\n"+
-                "Causes\n"+
-                " 1) Population growth\n"+
-                "   * People need somewhere to live\n"+
-                " 2) Improvements in transport and communication\n"+
-                "   * Allows cities to expand -- just look at Manila", # 2
+            'notecards': [  # group relevant information together
+                "Two main factors influence location of cities: site and situation",  # 0
+                "Site and situation can also impact how cities function and grow\n" +
+                " - Size of cities\n" +
+                "   * Εxample: Manila has trouble growing because of physical constraints\n" +
+                " - Economic development\n" +
+                "   * Example: Singapore got very wealthy due to strategic position on shipping routes\n" +
+                " - Political/military history\n" +
+                "   * Example: Istanbul as a shatterbelt",  # 1
+                "Key trend around the world -- cities are getting larger\n" +
+                "Causes\n" +
+                " 1) Population growth\n" +
+                "   * People need somewhere to live\n" +
+                " 2) Improvements in transport and communication\n" +
+                "   * Allows cities to expand -- just look at Manila",  # 2
             ]
         }
     }
@@ -74,13 +73,16 @@ raw_input_prompt = """
 
 # returns the selected object
 # e.g. syllabus['7 Cities']
+
+
 def resolve_wd():
     return resolve_dir(working_dir)
 
-def resolve_dir(str):
+
+def resolve_dir(str_):
     selected = syllabus
     # discard first '>' to avoid first split being ""
-    strx = str.removeprefix(">")
+    strx = str_.removeprefix(">")
     for i, v in enumerate(strx.split('>')):
         if v in selected:
             selected = selected[v]
@@ -88,6 +90,7 @@ def resolve_dir(str):
             print(f"Element {v} not found-- stopping resolve")
             return selected
     return selected
+
 
 def wd_get_topic():
     global working_dir
@@ -98,6 +101,7 @@ def wd_get_topic():
         return
     return syllabus[elements[0]][elements[1]]
 
+
 def wd_get_unit():
     global working_dir
     elements = working_dir.removeprefix(">").split('>')
@@ -107,25 +111,31 @@ def wd_get_unit():
     return syllabus[elements[0]]
 
 # use working dir's topic
+
+
 def add_vocab(vocab, definition, notes):
     topic = wd_get_topic()
-    if topic == None:
+    if topic is None:
         return
     topic['vocab'][vocab] = {
-            'definition': definition,
-            'notes': notes
-        }
+        'definition': definition,
+        'notes': notes
+    }
 
 # use working dir's topic
+
+
 def add_ncard():
     topic = wd_get_topic()
-    if topic == None:
+    if topic is None:
         return
     input = rawinput("Writing a new note"+raw_input_prompt)
     if not input == '':
         topic['notecards'].append(input)
 
 # use working dir's unit
+
+
 def add_topic(topic_name: str):
     unit = wd_get_unit()
     if topic_name in unit:
@@ -136,12 +146,14 @@ def add_topic(topic_name: str):
         'notecards': []
     }
 
+
 def del_elem(element: str):
     global working_dir
-    dir = resolve_wd();
+    dir = resolve_wd()
     if element.isnumeric() and isinstance(dir, list):
-        element = int(element) # convert to index if dir is a list
-    if (element in dir) if isinstance(dir, dict) else (element >= 0 and element < len(dir)):
+        element = int(element)  # convert to index if dir is a list
+    if (element in dir) if isinstance(dir, dict) else (element >= 0 
+                                                       and element < len(dir)):
         print(f"Deleting {element} in {working_dir}")
         del dir[element]
     else:
@@ -159,30 +171,35 @@ def wd_into(element: str):
     else:
         print(f"Element {element} does not exist")
 
-def wd_outof():
-    global working_dir # tell interpreter working_dir is global
 
-    wd_x = working_dir.removeprefix(">") # discard first > to avoid empty first string in split
+def wd_outof():
+    global working_dir  # tell interpreter working_dir is global
+
+    # discard first > to avoid empty first string in split
+    wd_x = working_dir.removeprefix(">")
     elements = wd_x.split('>')
     # if len(elements) < 2: # Units can now be exited
     #     print("Cannot get out of " + elements[0])
     #     return
     del elements[len(elements) - 1]
     working_dir = ""
-    for i,v in enumerate(elements):
+    for i, v in enumerate(elements):
         # if i > 0: # now working directory starts with >
         working_dir += ">"+v
 
 # concatenates all but first token with spaces in between
+
+
 def join_tokens(args):
     element_str = ""
-    for i,v in enumerate(args):
+    for i, v in enumerate(args):
         if i == 0:
             continue
-        element_str += v 
+        element_str += v
         if i < len(args)-1:
             element_str += " "
     return element_str
+
 
 def rawinput(prompt):
     print(prompt)
@@ -191,25 +208,28 @@ def rawinput(prompt):
         for line in stdin:
             if line == "EOF\n":
                 return str_
-            str_ += line # line includes trailing \n
+            str_ += line  # line includes trailing \n
 
     except EOFError:
         return str_
 
+
 def setkey(keyorindex):
     selected_obj = resolve_wd()
-    if isinstance(selected_obj, dict): # dict
-        if not keyorindex in selected_obj:
+    if isinstance(selected_obj, dict):  # dict
+        if keyorindex not in selected_obj:
             print("WARNING: making new key, structure may be compromised")
-        if keyorindex in selected_obj and isinstance(selected_obj[keyorindex], (list, dict)):
-            print("WARNING: current value to be replaced has more nested information ")
+        if keyorindex in selected_obj and isinstance(selected_obj[keyorindex],
+                                                     (list, dict)):
+            print("WARNING: current value to be replaced has more" +
+                  " nested information ")
 
         inputstr = rawinput(f"Writing to key {keyorindex}"+raw_input_prompt)
-        if inputstr == None or inputstr == '':
+        if inputstr is None or inputstr == '':
             print("Cancelling")
             return
         selected_obj[keyorindex] = inputstr
-    elif isinstance(selected_obj, list): # list
+    elif isinstance(selected_obj, list):  # list
         if not keyorindex.isnumeric():
             print("non-number provided")
             return
@@ -218,17 +238,20 @@ def setkey(keyorindex):
             print("invalid index")
             return
 
-        inputstr = rawinput(f"Writing to index {index} of {len(selected_obj)}"+raw_input_prompt)
-        if inputstr == None or inputstr == '':
+        inputstr = rawinput(
+            f"Writing to index {index} of {len(selected_obj)}"+raw_input_prompt)
+        if inputstr is None or inputstr == '':
             print("Cancelling")
             return
-        if index == len(selected_obj): # index is just one higher than the greatest existing index
+        # index is just one higher than the greatest existing index
+        if index == len(selected_obj):
             selected_obj.append(inputstr)
         else:
             selected_obj[index] = inputstr
 
     else:
         print("working directory is not at a list or dictionary")
+
 
 def show(element):
     # element can vary in type
@@ -242,12 +265,13 @@ def show(element):
     #  [0] Two main f... [str]
     #  [1] Site and s... [str]
     if isinstance(element, list):
-        print(f"list:")
-        for i,v in enumerate(element):
-            print(f" [{i}] {v[0:10]}... [str]") # substring [start:end(not included]
+        print("list:")
+        for i, v in enumerate(element):
+            # substring [start:end(not included]
+            print(f" [{i}] {v[0:10]}... [str]")
     elif isinstance(element, dict):
-        print(f"dict:")
-        for k,v in element.items():
+        print("dict:")
+        for k, v in element.items():
             print(f" key {k} [{type(v)}]")
     else:
         print(element)
@@ -256,12 +280,15 @@ def show(element):
 def main():
     running = True
     print("Welcome to the TAPMPHUD Syllabus Manager")
-    while running: # while program should run
-        # color all >'s grey with terminal color escape sequence (0m to reset color)
-        uinput = input(working_dir.replace('>', '\033[37m>\033[0m', -1) + "\033[37m$\033[0m ") # Get user input with the prompt
-        args = uinput.split() # Arguments (split by words)
-        argc = len(args) # number of elements
-        match args[0]: # First token is command
+    while running:  # while program should run
+        # color all >'s grey with terminal color escape sequence
+        # (0m to reset color)
+        # Get user input with the prompt
+        uinput = input(working_dir.replace(
+            '>', '\033[37m>\033[0m', -1) + "\033[37m$\033[0m ")
+        args = uinput.split()  # Arguments (split by words)
+        argc = len(args)  # number of elements
+        match args[0]:  # First token is command
             case 'exit':
                 running = False
             case 'help':
@@ -274,7 +301,8 @@ def main():
                 if argc == 1:
                     selected = resolve_wd()
                 else:
-                    selected = resolve_dir(working_dir + ">" + join_tokens(args))
+                    selected = resolve_dir(
+                        working_dir + ">" + join_tokens(args))
 
                 if isinstance(selected, (dict, list)):
                     show(selected)
@@ -293,19 +321,21 @@ def main():
                     else:
                         selected = resolve_wd()[int(input_str)]
                 else:
-                    selected = resolve_wd()[input_str] if input_str in resolve_wd() else "Key not found"
-                
-                show(selected) # todo: print prettier
+                    selected = resolve_wd()[
+                        input_str] if input_str in resolve_wd() else "Key not found"
+
+                show(selected)  # todo: print prettier
 
             case 'setkey':
                 setkey(join_tokens(args))
 
             case 'add-vterm':
-                if argc < 2: # only 'add-vterm'
+                if argc < 2:  # only 'add-vterm'
                     print("Improper usage- needs term name")
-                definition = rawinput("--- Writing definition (type EOF to finish) ---")
-                notes      = rawinput("--- Writing notes (type EOF to finish) ---")
-                add_vocab(join_tokens(args), definition.strip(), notes.strip())
+                definition = rawinput(
+                    "--- Writing definition (type EOF to finish) ---")
+                notes = rawinput("--- Writing notes (type EOF to finish) ---")
+                add_vocab(join_tokens(args), definition, notes)
 
             case 'add-ncard':
                 add_ncard()
@@ -323,8 +353,5 @@ def main():
                 print("Invalid command: " + args[0])
 
 
-
-
 if __name__ == '__main__':
     main()
-
