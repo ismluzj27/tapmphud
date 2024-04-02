@@ -1,6 +1,8 @@
 # tapmphud.py
 # "ta-pum-fud"
 
+import random
+
 from sys import stdin
 import json
 
@@ -24,21 +26,28 @@ del [element name] - delete any key/dict/str. can be a unit, topic, vocab term, 
 *load-file [filename] - Load syllabus from specified file"""  # * = NOT IMPLEMENTED
 
 syllabus = {
-    '7 Cities': {  # unit
-        '1 Orig Dist Sys Cities': {  # topic
+    'Python Basics': {  # unit
+        'Data Types': {  # topic
             'vocab': {
-                'Urbanization': {
+                'String': {
                     'definition': 'the process of developing towns and cities',
                     'notes': '',
                 },
-                'Site': {
+                'Integers': {
                     'definition': 'physical characteristics of a place',
                     'notes': "includes:\n" +
                     " - climate\n" +
                     " - natural features, especially water"
                 },
-                'Situation': {
+                'Float': {
                     'definition': 'location of a place relative to surroundings',
+                    'notes': "includes:\n"
+                    " - proximity to natural resources\n" +
+                    " - proximity to other cities\n" +
+                    " - accessibility"
+                },
+                'Boolean': {
+                    'definition': 'A 1 or 0 value indicating a variety of things most commonly true or false, on/off',
                     'notes': "includes:\n"
                     " - proximity to natural resources\n" +
                     " - proximity to other cities\n" +
@@ -292,7 +301,8 @@ def read_from_file(filepath):
 
 def main():
     running = True
-    print("Welcome to the TAPMPHUD Syllabus Manager")
+    print("Welcome to the TAPMPHUD Syllabus Manager"
+          "This is the console all your inputs will be ")
     while running:  # while program should run
         # color all >'s grey with terminal color escape sequence
         # (0m to reset color)
@@ -301,14 +311,14 @@ def main():
             '>', '\033[37m>\033[0m', -1) + "\033[37m$\033[0m ")
         args = uinput.split()  # Arguments (split by words)
         argc = len(args)  # number of elements
-        match args[0]:  # First token is command
+        match args[0].lower():  # First token is command
             case 'exit':
                 running = False
             case 'help':
                 print(help)
-            case 'pwd':
+            case 'pwd': # Print where you are now
                 print(working_dir)
-            case 'outof':
+            case 'outof': # Moving to the large file
                 wd_outof()
             case 'ls':
                 if argc == 1:
