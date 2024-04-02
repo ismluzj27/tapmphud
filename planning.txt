@@ -19,6 +19,9 @@ units = {
                 "The sky is red\n - Do not question it",
                 "2+2=5",
             ]
+        }, # Don't forget the comma
+        'Topic name 2': {
+            ...
         }
     },
 }
