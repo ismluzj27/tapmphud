@@ -2,6 +2,7 @@
 # "ta-pum-fud"
 
 from sys import stdin
+import json
 
 help = """exit - exit
 help - list commands
@@ -70,6 +71,8 @@ working_dir = ">7 Cities>1 Orig Dist Sys Cities"
 raw_input_prompt = """
 --- Leave blank to cancel ---
 ---   Type EOF to stop    ---"""
+
+# print(json.dumps(syllabus))
 
 # returns the selected object
 # e.g. syllabus['7 Cities']
@@ -276,6 +279,16 @@ def show(element):
     else:
         print(element)
 
+def write_to_file(filepath):
+    with open(filepath, 'w') as file:
+        file.write(json.dumps(syllabus))
+
+def read_from_file(filepath):
+    global syllabus
+    with open(filepath, 'r') as file:
+        syllabus = json.load(file)
+        print("Imported: " + syllabus)
+
 
 def main():
     running = True
@@ -348,6 +361,11 @@ def main():
 
             case 'del':
                 del_elem(join_tokens(args))
+
+            case 'write-file':
+                write_to_file(join_tokens(args))
+            case 'read-file':
+                read_from_file(join_tokens(args))
 
             case _:
                 print("Invalid command: " + args[0])
