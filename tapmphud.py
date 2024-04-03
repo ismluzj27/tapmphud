@@ -80,7 +80,7 @@ syllabus = {
 
 # print(syllabus['7 Cities']['1 Orig Dist Sys Cities']['notes'][1])
 #              >Unit    >Topic
-working_dir = ">7 Cities>1 Orig Dist Sys Cities"
+working_dir = ">Python Basics>Data Types"
 raw_input_prompt = """
 --- Leave blank to cancel ---
 ---   Type EOF to stop    ---"""
