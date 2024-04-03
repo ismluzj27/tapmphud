@@ -378,7 +378,7 @@ def main():
 
             case 'write-file':
                 write_to_file(join_tokens(args))
-            case 'read-file':
+            case 'load-file':
                 read_from_file(join_tokens(args))
 
             case _:
