@@ -300,7 +300,7 @@ def read_from_file(filepath):
     global syllabus
     with open(filepath, 'r') as file:
         syllabus = json.load(file)
-        print("Imported: " + syllabus)
+        print("Imported: " + str(syllabus))
 
 
 def main():
