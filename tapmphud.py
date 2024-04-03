@@ -8,7 +8,9 @@ import json
 
 help = """exit - exit
 help - list commands
+*quiz - Generate quiz based on syllabus
 
+## Navigation ##
 pwd - print working directory
 ls - list all elements in working directory
 ls [element] - list all elements in specified list/dictionary
@@ -16,14 +18,16 @@ read [key OR index] - print the value of a key/at index of list
 into [element] - select an element in current working directory
 outof - go up in the working directory into broader element
 
+## Modifying syllabus ##
 add-vterm [term name] - add vocabulary term w/ def & notes (at working directory's topic)
 add-ncard (asks for user input) - add a notecard (at working directory's topic) 
 add-topic [topic name] - add a topic (at working directory's unit)
 setkey [key/index] (asks for user input) - replace content at key or index with user input
 del [element name] - delete any key/dict/str. can be a unit, topic, vocab term, note, etc.
 
-*write-file [filename] - Write current syllabus to the specified file
-*load-file [filename] - Load syllabus from specified file"""  # * = NOT IMPLEMENTED
+## Exporting and importing to file ##
+write-file [filename] - Write current syllabus to the specified file
+load-file [filename] - Load syllabus from specified file"""  # * = NOT IMPLEMENTED
 
 syllabus = {
     'Python Basics': {  # unit
