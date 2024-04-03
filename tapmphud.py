@@ -90,11 +90,12 @@ raw_input_prompt = """
 # returns the selected object
 # e.g. syllabus['7 Cities']
 
-
 def resolve_wd():
     return resolve_dir(working_dir)
 
-
+# Given a path, return the object that is at that path.
+# e.g. given >Python Basics>Data Types"
+#   ...returns syllabus["Python Basics"]["Data Types"]
 def resolve_dir(str_):
     selected = syllabus
     # discard first '>' to avoid first split being ""
@@ -107,7 +108,7 @@ def resolve_dir(str_):
             return selected
     return selected
 
-
+# Extract the topic from the working directory (a string).
 def wd_get_topic():
     global working_dir
     # >unit>topic
@@ -117,7 +118,7 @@ def wd_get_topic():
         return
     return syllabus[elements[0]][elements[1]]
 
-
+# Gets the unit from the working directory
 def wd_get_unit():
     global working_dir
     elements = working_dir.removeprefix(">").split('>')
@@ -126,9 +127,9 @@ def wd_get_unit():
         return
     return syllabus[elements[0]]
 
+# Add a vocabulary term to the topic's vocabulary dict.
+# SEE: planning.txt for example of a structure of a topic.
 # use working dir's topic
-
-
 def add_vocab(vocab, definition, notes):
     topic = wd_get_topic()
     if topic is None:
@@ -138,9 +139,8 @@ def add_vocab(vocab, definition, notes):
         'notes': notes
     }
 
+# Add a notecard to the topic's notecard list.
 # use working dir's topic
-
-
 def add_ncard():
     topic = wd_get_topic()
     if topic is None:
@@ -150,8 +150,7 @@ def add_ncard():
         topic['notecards'].append(input)
 
 # use working dir's unit
-
-
+# Add a topic to the current unit.
 def add_topic(topic_name: str):
     unit = wd_get_unit()
     if topic_name in unit:
@@ -163,6 +162,7 @@ def add_topic(topic_name: str):
     }
 
 
+# Resolve element at path and delete it.
 def del_elem(element: str):
     global working_dir
     dir = resolve_wd()
@@ -187,7 +187,7 @@ def wd_into(element: str):
     else:
         print(f"Element {element} does not exist")
 
-
+# Move *out of* the current element and into the one that contains it.
 def wd_outof():
     global working_dir  # tell interpreter working_dir is global
 
@@ -204,8 +204,6 @@ def wd_outof():
         working_dir += ">"+v
 
 # concatenates all but first token with spaces in between
-
-
 def join_tokens(args):
     element_str = ""
     for i, v in enumerate(args):
@@ -216,7 +214,7 @@ def join_tokens(args):
             element_str += " "
     return element_str
 
-
+# Get user input
 def rawinput(prompt):
     print(prompt)
     str_ = ""
@@ -229,7 +227,7 @@ def rawinput(prompt):
     except EOFError:
         return str_
 
-
+# Set the value of given key or index of dict or list respectively
 def setkey(keyorindex):
     selected_obj = resolve_wd()
     if isinstance(selected_obj, dict):  # dict
@@ -268,7 +266,7 @@ def setkey(keyorindex):
     else:
         print("working directory is not at a list or dictionary")
 
-
+# Print the element and its contents in a formatted way
 def show(element):
     # element can vary in type
     # todo: implement printing format for list, dict, and str
@@ -320,9 +318,9 @@ def main():
                 running = False
             case 'help':
                 print(help)
-            case 'pwd': # Print where you are now
+            case 'pwd':  # Print where you are now
                 print(working_dir)
-            case 'outof': # Moving to the large file
+            case 'outof':  # Moving to the large file
                 wd_outof()
             case 'ls':
                 if argc == 1:
