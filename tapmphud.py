@@ -153,6 +153,8 @@ def add_ncard():
 # Add a topic to the current unit.
 def add_topic(topic_name: str):
     unit = wd_get_unit()
+    if unit is None:
+        return
     if topic_name in unit:
         print("Warning: topic name already exists in unit. Aborting")
         return
