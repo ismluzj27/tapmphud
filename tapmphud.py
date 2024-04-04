@@ -284,7 +284,6 @@ def setkey(keyorindex):
 # Print the element and its contents in a formatted way
 def show(element):
     # element can vary in type
-    # todo: implement printing format for list, dict, and str
     # e.g.
     # Urbanization [dict]:
     #  key definition [str]
@@ -369,7 +368,7 @@ def main():
                     selected = resolve_wd()[
                         input_str] if input_str in resolve_wd() else "Key not found"
 
-                show(selected)  # todo: print prettier
+                show(selected)
 
             case 'setkey':
                 setkey(join_tokens(args))
