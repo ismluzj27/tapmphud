@@ -8,9 +8,11 @@ import random
 from sys import stdin
 import json
 
+# TODO: implement all asterisks
 help = """exit - exit
 help - list commands
 *quiz - Generate quiz based on syllabus
+*search [term] - Look for and show a term in the syllabus
 
 ## Navigation ##
 pwd - print working directory
@@ -308,6 +310,7 @@ def main():
     print("Welcome to the TAPMPHUD Syllabus Manager\n" +
           "Type 'help' and press Enter to list all commands.")
     while running:  # while program should run
+        print(border_design)
         # color all >'s grey with terminal color escape sequence
         # (0m to reset color)
         # Get user input with the prompt
