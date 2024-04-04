@@ -2,6 +2,7 @@
 # "ta-pum-fud"
 
 import random
+import json
 
 from sys import stdin
 
@@ -324,7 +325,7 @@ def main():
     print("Welcome to the TAPMPHUD Syllabus Manager\n" +
           "Type 'help' and press Enter to list all commands.")
     while running:  # while program should run
-        print(border_design)
+        border()
         # color all >'s grey with terminal color escape sequence
         # (0m to reset color)
         # Get user input with the prompt
