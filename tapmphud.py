@@ -13,6 +13,7 @@ help = """exit - exit
 help - list commands
 *quiz - Generate quiz based on syllabus
 *search [term] - Look for and show a term in the syllabus
+*sort - bubble sort vocabulary alphabetically
 
 ## Navigation ##
 pwd - print working directory
