@@ -1,7 +1,10 @@
 # tapmphud.py
 # "ta-pum-fud"
 
-border_design = "-----<><>-----<><>-----<><>-----<><>-----<><>-----<><>-----"
+border_design = "------<><><>------<><>------<><><>------<><>------<><><>------"
+border_design1 = "-----<~~~~>-----<~~~~>-----<~~~~>-----<~~~~>-----<~~~~>-----"
+border_design2 = "-~-~-</^\>-~-~-</^\>-~-~-</^\>-~-~-</^\>-~-~-</^\>-~-~-</^\>"
+border_design3 = "---<<<~~~^^^~~~>>>------<<<~~~^^^~~~>>>------<<<~~~^^^~~~>>>---"
 
 import random
 
@@ -300,6 +303,9 @@ def read_from_file(filepath):
     with open(filepath, 'r') as file:
         syllabus = json.load(file)
         print("Imported: " + str(syllabus))
+
+def quiz():
+    pass
 
 
 
