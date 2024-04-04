@@ -312,7 +312,7 @@ def main():
         # (0m to reset color)
         # Get user input with the prompt
         uinput = input(working_dir.replace(
-            '>', '\033[37m>\033[0m', -1) + "\033[37m$\033[0m ")
+            '>', ' \033[32m→\033[0m ', -1) + " \033[32m%\033[0m ")
         args = uinput.split()  # Arguments (split by words)
         argc = len(args)  # number of elements
         match args[0].lower():  # First token is command
