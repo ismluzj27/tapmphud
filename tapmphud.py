@@ -34,45 +34,42 @@ syllabus = {
         'Data Types': {  # topic
             'vocab': {
                 'String': {
-                    'definition': 'the process of developing towns and cities',
-                    'notes': '',
+                    'definition': 'A sequence of characters enclosed within either single quotes (' ') or double quotes (" ").',
+                    'notes': "fstring is when you add an 'f' immediately before the quotation mark.\nThis allows for you pyhton to recognize variables in the string under ceartain conditions.",
                 },
                 'Integers': {
-                    'definition': 'physical characteristics of a place',
-                    'notes': "includes:\n" +
-                    " - climate\n" +
-                    " - natural features, especially water"
+                    'definition': 'Zero, positive or negative whole numbers without a fractional/decimal part.',
+                    'notes': "Can't have:\n" +
+                    " - Decimal point\n" +
+                    " - Letters or other non number characters"
                 },
                 'Float': {
-                    'definition': 'location of a place relative to surroundings',
-                    'notes': "includes:\n"
-                    " - proximity to natural resources\n" +
-                    " - proximity to other cities\n" +
-                    " - accessibility"
+                    'definition': 'Numbers are decimal values or fractional numbers.',
+                    'notes': "Floats don't need to always have a decimal point, it can contain an integer and still be set as a float.",
                 },
                 'Boolean': {
-                    'definition': 'A 1 or 0 value indicating a variety of things most commonly true or false, on/off',
-                    'notes': "includes:\n"
-                    " - proximity to natural resources\n" +
-                    " - proximity to other cities\n" +
-                    " - accessibility"
+                    'definition': 'A 1 or 0 value indicating a variety of things.',
+                    'notes': "Used commonly for:\n"
+                    " - Binary\n" +
+                    " - True or False\n" +
+                    " - Yes or No"
                 }
             },
             'notecards': [  # group relevant information together
-                "Two main factors influence location of cities: site and situation",  # 0
-                "Site and situation can also impact how cities function and grow\n" +
-                " - Size of cities\n" +
-                "   * Εxample: Manila has trouble growing because of physical constraints\n" +
-                " - Economic development\n" +
-                "   * Example: Singapore got very wealthy due to strategic position on shipping routes\n" +
-                " - Political/military history\n" +
-                "   * Example: Istanbul as a shatterbelt",  # 1
-                "Key trend around the world -- cities are getting larger\n" +
-                "Causes\n" +
-                " 1) Population growth\n" +
-                "   * People need somewhere to live\n" +
-                " 2) Improvements in transport and communication\n" +
-                "   * Allows cities to expand -- just look at Manila",  # 2
+                "4 main data types: String, Float, Integer, Boolean",  # 0
+                "Datatype Restrictions.\n" +
+                " - String\n" +
+                "   * All things in string are binded together, difficult to separate things.\n" +
+                " - Integer\n" +
+                "   * Can't contain decimal point.\n" +
+                " - Float\n" +
+                "   * Can't contain any other characters but numbers",  # 1
+                "Other Data types\n" +
+                "Sequence Data Types\n" +
+                " 1) list\n" +
+                "   * [] and , are used in list data type\n" +
+                " 2) tuple\n" +
+                "   * () and , are used in tuple data type",  # 2
             ]
         }
     }
@@ -301,6 +298,7 @@ def read_from_file(filepath):
     with open(filepath, 'r') as file:
         syllabus = json.load(file)
         print("Imported: " + str(syllabus))
+
 
 
 def main():
