@@ -305,8 +305,8 @@ def read_from_file(filepath):
 
 def main():
     running = True
-    print("Welcome to the TAPMPHUD Syllabus Manager"
-          "This is the console all your inputs will be ")
+    print("Welcome to the TAPMPHUD Syllabus Manager\n" +
+          "Type 'help' and press Enter to list all commands.")
     while running:  # while program should run
         # color all >'s grey with terminal color escape sequence
         # (0m to reset color)
