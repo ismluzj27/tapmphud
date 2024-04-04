@@ -1,15 +1,22 @@
 # tapmphud.py
 # "ta-pum-fud"
 
+import random
+
+from sys import stdin
+
 border_design = "------<><><>------<><>------<><><>------<><>------<><><>------"
 border_design1 = "-----<~~~~>-----<~~~~>-----<~~~~>-----<~~~~>-----<~~~~>-----"
 border_design2 = "-~-~-</^\>-~-~-</^\>-~-~-</^\>-~-~-</^\>-~-~-</^\>-~-~-</^\>"
 border_design3 = "---<<<~~~^^^~~~>>>------<<<~~~^^^~~~>>>------<<<~~~^^^~~~>>>---"
 
-import random
+def border():
+    borders = [border_design,
+                border_design1,
+                border_design2,
+                border_design3]
+    print(random.choice(borders))
 
-from sys import stdin
-import json
 
 help = """exit - exit
 help - list commands
