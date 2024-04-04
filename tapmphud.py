@@ -1,6 +1,8 @@
 # tapmphud.py
 # "ta-pum-fud"
 
+border_design = "-----<><>-----<><>-----<><>-----<><>-----<><>-----<><>-----"
+
 import random
 
 from sys import stdin
