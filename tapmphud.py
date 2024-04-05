@@ -439,7 +439,10 @@ def main():
 
             case 'search':
                 current_search_dir = working_dir
-                search_in_item(resolve_wd(), join_tokens(args))
+                if join_tokens(args).strip() == "":
+                    print("Improper usage- needs search term")
+                else:
+                    search_in_item(resolve_wd(), join_tokens(args))
 
             case 'into':
                 wd_into(join_tokens(args))
