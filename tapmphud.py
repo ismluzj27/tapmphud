@@ -23,7 +23,7 @@ def border():
 help = """exit - exit
 help - list commands
 *quiz - Generate quiz based on syllabus
-*search [term] - Look for and show a term in the syllabus
+search [term] - Look for and show a term in the syllabus
 *sort - bubble sort vocabulary alphabetically
 
 ## Navigation ##
@@ -242,6 +242,16 @@ def rawinput(prompt):
     except EOFError:
         return str_
 
+current_search_dir = ""
+""" for sef
+for ku,vu in syllabus.items(): # iterate through units
+    print(ku)
+    for kt, vt in vu.items(): # iterate through topics
+        print(kt)
+        print(vt)
+"""
+
+
 # Set the value of given key or index of dict or list respectively
 def setkey(keyorindex):
     selected_obj = resolve_wd()
@@ -303,6 +313,30 @@ def show(element):
             print(f" key {k} [{type(v)}]")
     else:
         print(element)
+
+
+def search_in_item(item, term: str):
+    global current_search_dir
+
+    if isinstance(item, str):
+        if item.lower().__contains__(term.lower()):
+            print("Match found: " + item)
+            return True
+        return False
+
+    for k,v in enumerate(item) if isinstance(item, list) else item.items():
+        prev_search_dir = current_search_dir
+        current_search_dir += ">" + str(k)
+        result = search_in_item(v, term) or str(k).lower().__contains__(term.lower())
+        # print(f"{current_search_dir}, {result}")
+        if result:
+            # print("\nprev: " + prev_search_dir + "\ncurr: " + current_search_dir)'
+            print(f"\nMatch term \"{term}\": {current_search_dir}") # print current match's directory
+            show(v)
+        current_search_dir = prev_search_dir  # revert after iterating through all elements
+
+
+# search_in_item(syllabus, "value")
 
 def write_to_file(filepath):
     with open(filepath, 'w') as file:
@@ -386,6 +420,9 @@ def main():
 
             case 'add-topic':
                 add_topic(join_tokens(args))
+
+            case 'search':
+                search_in_item(resolve_wd(), join_tokens(args))
 
             case 'into':
                 wd_into(join_tokens(args))
