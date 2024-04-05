@@ -23,7 +23,7 @@ def border():
 help = """exit - exit
 help - list commands
 *quiz - Generate quiz based on syllabus
-search [term] - Look for and show a term in the syllabus
+search [term] - Look for and show any matches to term within **your current directory**.
 *sort - bubble sort vocabulary alphabetically
 
 ## Navigation ##
@@ -317,26 +317,40 @@ def show(element):
 
 def search_in_item(item, term: str):
     global current_search_dir
+    # current_search_dir is global and indicates where function is searching
+    # no matter how many recursions deep it is in.
+    # do NOT replace, only append
 
     if isinstance(item, str):
         if item.lower().__contains__(term.lower()):
-            print("Match found: " + item)
-            return True
+            # print("Match found: " + item)
+            return True # return true if found
+            # the printing will be handled by the previous recursion step
         return False
 
     for k,v in enumerate(item) if isinstance(item, list) else item.items():
-        prev_search_dir = current_search_dir
+        prev_search_dir = current_search_dir  # make backup of current search directory
+        # add key to current search directory
+        # so deeper recursions of this function will know where we are currently at
         current_search_dir += ">" + str(k)
-        result = search_in_item(v, term) or str(k).lower().__contains__(term.lower())
+        # if key has search term OR if value (if str) has search term
+        # if value is a list or dict, will search within it for the term (recursion)
+        result = search_in_item(v, term)
+        keyresult = str(k).lower().__contains__(term.lower())
         # print(f"{current_search_dir}, {result}")
-        if result:
+        if result or keyresult:
             # print("\nprev: " + prev_search_dir + "\ncurr: " + current_search_dir)'
             print(f"\nMatch term \"{term}\": {current_search_dir}") # print current match's directory
-            show(v)
-        current_search_dir = prev_search_dir  # revert after iterating through all elements
+            if result: # don't print value if only key and NOT VALUE matches.
+                show(v)
+        # revert (remove key from current search directory) after looking at / through value.
+        current_search_dir = prev_search_dir
 
 
-# search_in_item(syllabus, "value")
+pre_test_wd = working_dir
+working_dir = ">"
+# search_in_item(syllabus, "boolean")
+working_dir = pre_test_wd
 
 def write_to_file(filepath):
     with open(filepath, 'w') as file:
@@ -354,6 +368,8 @@ def quiz():
 
 
 def main():
+    global working_dir
+    global current_search_dir
     running = True
     print("Welcome to the TAPMPHUD Syllabus Manager\n" +
           "Type 'help' and press Enter to list all commands.")
@@ -422,6 +438,7 @@ def main():
                 add_topic(join_tokens(args))
 
             case 'search':
+                current_search_dir = working_dir
                 search_in_item(resolve_wd(), join_tokens(args))
 
             case 'into':
