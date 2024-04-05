@@ -22,7 +22,7 @@ def border():
 # TODO: implement all asterisks
 help = """exit - exit
 help - list commands
-*quiz - Generate quiz based on syllabus
+*flashcard-review [unit] - Generate quiz based on syllabus
 *search [term] - Look for and show a term in the syllabus
 *sort - bubble sort vocabulary alphabetically
 
@@ -314,8 +314,9 @@ def read_from_file(filepath):
         syllabus = json.load(file)
         print("Imported: " + str(syllabus))
 
-def quiz():
-    pass
+def quiz(terms, definitions):
+    print("You have entered the flashcard review system.")
+    border()
 
 
 
@@ -383,6 +384,21 @@ def main():
 
             case 'add-ncard':
                 add_ncard()
+
+            case 'flashcard-review':
+                definitions_list = []
+                terms_list = []
+                for ku, vu in syllabus.items(): # unit.
+                    for kt, vt in vu.items(): # topic.
+                        terms = vt["vocab"].items()  # list of tuples.
+                        for (key, term) in terms:
+                            # key will be a string.
+                            # term will be dictionary dof definition and notes.
+                            definitions_list.append( term['definition'] )
+                            terms_list.append( key ) # key will be a string
+
+
+
 
             case 'add-topic':
                 add_topic(join_tokens(args))
