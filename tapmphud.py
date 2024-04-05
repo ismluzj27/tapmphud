@@ -26,7 +26,7 @@ help - list commands
 search [term] - Look for and show any matches to term within **your current directory**.
 *sort - bubble sort vocabulary alphabetically
 
-## Navigation ##
+\033[32m## Navigation ##\033[0m
 pwd - print working directory
 ls - list all elements in working directory
 ls [element] - list all elements in specified list/dictionary
@@ -34,14 +34,14 @@ read [key OR index] - print the value of a key/at index of list
 into [element] - select an element in current working directory
 outof - go up in the working directory into broader element
 
-## Modifying syllabus ##
+\033[32m## Modifying syllabus ##\033[0m
 add-vterm [term name] - add vocabulary term w/ def & notes (at working directory's topic)
 add-ncard (asks for user input) - add a notecard (at working directory's topic) 
 add-topic [topic name] - add a topic (at working directory's unit)
 setkey [key/index] (asks for user input) - replace content at key or index with user input
 del [element name] - delete any key/dict/str. can be a unit, topic, vocab term, note, etc.
 
-## Exporting and importing to file ##
+\033[32m## Exporting and importing to file ##\033[0m
 write-file [filename] - Write current syllabus to the specified file
 load-file [filename] - Load syllabus from specified file"""  # * = NOT IMPLEMENTED
 
@@ -371,8 +371,8 @@ def main():
     global working_dir
     global current_search_dir
     running = True
-    print("Welcome to the TAPMPHUD Syllabus Manager\n" +
-          "Type 'help' and press Enter to list all commands.")
+    print("\033[32mWelcome to the TAPMPHUD Syllabus Manager\n" +
+          "Type 'help' and press Enter to list all commands.\033[0m")
     while running:  # while program should run
         border()
         # color all >'s grey with terminal color escape sequence
