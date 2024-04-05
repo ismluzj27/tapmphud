@@ -394,11 +394,11 @@ def main():
                         # vt["vocab"] will be dict of [key]vocab_term: {definition, notes}
                         # terms will be a tuple of (vocab_term, {definition, notes})
                         terms = vt["vocab"].items()
-                        for (key, term) in terms:
-                            # key will be a string (the vocab term)
-                            # term will be dictionary dof definition and notes
-                            definitions_list.append( term['definition'] ) # access definition
-                            terms_list.append( key ) # key will be a string
+                        for (term, dict) in terms:
+                            # term will be a string (the vocab term)
+                            # dict will be dictionary dof definition and notes
+                            definitions_list.append( dict['definition'] ) # access definition
+                            terms_list.append( term ) # key will be a string
                             # note from luzj: sorry about the nested dictionary hell ._.
 
 
