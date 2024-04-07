@@ -113,6 +113,8 @@ def resolve_dir(str_):
     selected = syllabus
     # discard first '>' to avoid first split being ""
     strx = str_.removeprefix(">")
+    if strx == '':
+        return syllabus
     for i, v in enumerate(strx.split('>')):
         if v in selected:
             selected = selected[v]
