@@ -47,8 +47,8 @@ setkey [key/index] (asks for user input) - replace content at key or index with 
 del [element name] - delete any key/dict/str. can be a unit, topic, vocab term, note, etc.
 
 \033[32m## Exporting and importing to file ##\033[0m
-write-file [filename] - Write current syllabus to the specified file
-load-file [filename] - Load syllabus from specified file"""  # * = NOT IMPLEMENTED
+write-file [filename] - Write current syllabus to the specified file (JSON format)
+load-file [filename] - Load syllabus from specified file (JSON format)"""  # * = NOT IMPLEMENTED
 
 syllabus = {
     'Python Basics': {  # unit
