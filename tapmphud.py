@@ -34,10 +34,15 @@ read [key OR index] - print the value of a key/at index of list
 into [element] - select an element in current working directory
 outof - go up in the working directory into broader element
 
+Syllabus structure:
+> Unit > Topic > Vocabulary
+               > Notecards
+
 \033[32m## Modifying syllabus ##\033[0m
 add-vterm [term name] - add vocabulary term w/ def & notes (at working directory's topic)
 add-ncard (asks for user input) - add a notecard (at working directory's topic) 
 add-topic [topic name] - add a topic (at working directory's unit)
+add-unit [unit name] - Make an empty unit with name provided
 setkey [key/index] (asks for user input) - replace content at key or index with user input
 del [element name] - delete any key/dict/str. can be a unit, topic, vocab term, note, etc.
 
@@ -438,6 +443,12 @@ def main():
 
             case 'add-topic':
                 add_topic(join_tokens(args))
+
+            case 'add-unit':
+                if argc <= 1:
+                    print("Improper usage- needs unit name")
+                else:
+                    syllabus[join_tokens(args)] = {}
 
             case 'search':
                 current_search_dir = working_dir
