@@ -22,7 +22,7 @@ def border():
 # TODO: implement all asterisks
 help = """exit - exit
 help - list commands
-*quiz - Generate quiz based on syllabus
+*flashcard-review [unit] - Generate quiz based on syllabus
 search [term] - Look for and show any matches to term within **your current directory**.
 *sort - bubble sort vocabulary alphabetically
 
