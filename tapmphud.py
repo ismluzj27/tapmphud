@@ -23,7 +23,7 @@ def border():
 help = """exit - exit
 help - list commands
 *flashcard-review [unit] - Generate quiz based on syllabus
-*search [term] - Look for and show a term in the syllabus
+search [term] - Look for and show a term in the syllabus
 *sort - bubble sort vocabulary alphabetically
 
 ## Navigation ##
