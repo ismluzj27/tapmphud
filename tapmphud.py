@@ -467,6 +467,7 @@ def main():
                 write_to_file(join_tokens(args))
             case 'load-file':
                 read_from_file(join_tokens(args))
+                working_dir = "" # Set to root directory
 
             case _:
                 print("Invalid command: " + args[0])
