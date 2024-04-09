@@ -315,8 +315,79 @@ def read_from_file(filepath):
         print("Imported: " + str(syllabus))
 
 def quiz(terms, definitions):
-    print("You have entered the flashcard review system.")
+    loop = 1
+    print("""You have entered the flashcard review system.
+          The flashcard review system will display a term or definition depending on what you would like.
+          Then once you feel you have the answer you may view the answer and see if you were correct.""")
     border()
+    print("""Possible inputs for this program:
+    blank/press Enter - flip flashcard over
+    e - move to the next term/definition
+    q - move to the previous term/definition
+    exit - exit the flashcard review system
+    """)
+    border()
+    study_choice = input("""Would you like to study the definitions or the terms? 
+    terms - display the terms flip to see definitions
+    definitions - display the definitions flip to see terms
+    Choose which one you would like to do: """)
+    border()
+    if study_choice.lower() == "terms":
+        flashcards = list(zip(terms, definitions))
+        random.shuffle(flashcards)
+        while loop == 1:
+            for term, definition in flashcards:
+                print("Term:", term)
+                input("Press Enter to reveal definition...")
+                print("Definition:", definition)
+                print()
+                choice = input("""Possible inputs for this program:
+                blank/press Enter - flip flashcard over
+                exit - exit the flashcard review system
+                r - reshuffle the terms
+                """)
+                if choice.lower() == 'r':
+                    print("You have chosen to reshuffle the terms.")
+                    break
+                elif choice.lower() == 'exit':
+                    loop = 0
+                    break
+                elif choice == "":
+                    pass
+                else:
+                    print("That is not a valid choice. Please try again")
+                return 1
+
+    elif study_choice.lower() == "definitions":
+        flashcards = list(zip(definitions, terms))
+        random.shuffle(flashcards)
+        while loop == 1:
+            for definitions, terms in flashcards:
+                print("Definition:", definitions)
+                input("Press Enter to reveal definition...")
+                print("Term:", terms)
+                print()
+                choice = input("""Possible inputs for this program:
+                blank/press Enter - flip flashcard over
+                exit - exit the flashcard review system
+                r - reshuffle the terms
+                """)
+                if choice.lower() == 'r':
+                    print("You have chosen to reshuffle the terms.")
+                    break
+                elif choice.lower() == 'exit':
+                    loop = 0
+                    break
+                elif choice == "":
+                    pass
+                else:
+                    print("That is not a valid choice. Please try again")
+                    return 1
+
+    else:
+        print("That is not a valid choice. Please try again")
+        return 1
+
 
 
 
@@ -386,6 +457,7 @@ def main():
                 add_ncard()
 
             case 'flashcard-review':
+                rerun = 0
                 definitions_list = []
                 terms_list = []
                 for ku, vu in syllabus.items(): # unit.
@@ -397,8 +469,11 @@ def main():
                             definitions_list.append( term['definition'] )
                             terms_list.append( key ) # key will be a string
 
-
-
+                rerun = quiz(terms_list, definitions_list)
+                if rerun == 1:
+                    quiz(terms_list, definitions_list)
+                else:
+                    pass
 
             case 'add-topic':
                 add_topic(join_tokens(args))
@@ -419,4 +494,6 @@ def main():
 
 
 if __name__ == '__main__':
+    main()
+else:
     main()
