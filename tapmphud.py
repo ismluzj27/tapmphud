@@ -23,7 +23,7 @@ def border():
 help = """exit - exit
 help - list commands
 *flashcard-review [unit] - Generate quiz based on syllabus
-*search [term] - Look for and show a term in the syllabus
+search [term] - Look for and show a term in the syllabus
 *sort - bubble sort vocabulary alphabetically
 
 ## Navigation ##
@@ -460,14 +460,18 @@ def main():
                 rerun = 0
                 definitions_list = []
                 terms_list = []
-                for ku, vu in syllabus.items(): # unit.
-                    for kt, vt in vu.items(): # topic.
-                        terms = vt["vocab"].items()  # list of tuples.
-                        for (key, term) in terms:
-                            # key will be a string.
-                            # term will be dictionary dof definition and notes.
-                            definitions_list.append( term['definition'] )
-                            terms_list.append( key ) # key will be a string
+                for ku, vu in syllabus.items():  # iterate through units
+                    for kt, vt in vu.items():  # iterate through topics
+                        # vt is a dict of {vocab, notecards} (see planning.txt for structure)
+                        # vt["vocab"] will be dict of [key]vocab_term: {definition, notes}
+                        # terms will be a tuple of (vocab_term, {definition, notes})
+                        terms = vt["vocab"].items()
+                        for (term, dict_) in terms:
+                            # term will be a string (the vocab term)
+                            # dict_ will be dictionary dof definition and notes
+                            definitions_list.append( dict_['definition'] ) # access definition
+                            terms_list.append( term ) # key will be a string
+                            # note from luzj: sorry about the nested dictionary hell ._.
 
                 rerun = quiz(terms_list, definitions_list)
                 if rerun == 1:
