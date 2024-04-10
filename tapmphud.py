@@ -20,11 +20,13 @@ def border():
 
 
 # TODO: implement all asterisks
-help = """exit - exit
+help = """
+
+exit - exit
 help - list commands
 flashcard-review [unit] - Generate quiz based on syllabus
 search [term] - Look for and show any matches to term within **your current directory**.
-*sort - bubble sort vocabulary alphabetically
+sort - bubble sort vocabulary alphabetically
 
 \033[32m## Navigation ##\033[0m
 pwd - print working directory
@@ -394,8 +396,9 @@ def quiz(terms, definitions):
             for term, definition in flashcards:
                 print("Term:", term)
                 input("Press Enter to reveal definition...")
+                border()
+                print("Term:", term)
                 print("Definition:", definition)
-                print()
                 choice = input("""Possible inputs for this program:
                 blank/press Enter - flip flashcard over
                 exit - exit the flashcard review system
@@ -443,8 +446,20 @@ def quiz(terms, definitions):
         print("That is not a valid choice. Please try again")
         return 1
 
-
-
+def bubble_sort(list):
+    swap = True
+    while swap:
+        swap = False
+        for i in range(len(list) - 1):
+            if list[i].lower() > list[i + 1].lower():
+                print(list[i].lower(), ">", list[i + 1].lower())
+                temp = list[i]
+                list[i] = list[i + 1]
+                list[i + 1] = temp
+                swap = True
+            else:
+                print(list[i].lower(), "<", list[i + 1].lower())
+    print("\n",list)
 
 def main():
     global working_dir
@@ -529,6 +544,7 @@ def main():
                             definitions_list.append( dict_['definition'] ) # access definition
                             terms_list.append( term ) # key will be a string
                             # note from luzj: sorry about the nested dictionary hell ._.
+                            # note from Sef: Nah u good, we still got it.
 
                 rerun = quiz(terms_list, definitions_list)
                 if rerun == 1:
@@ -538,6 +554,21 @@ def main():
 
             case 'add-topic':
                 add_topic(join_tokens(args))
+
+            case 'sort':
+                terms_list = []
+                for ku, vu in syllabus.items():  # iterate through units
+                    for kt, vt in vu.items():  # iterate through topics
+                        # vt is a dict of {vocab, notecards} (see planning.txt for structure)
+                        # vt["vocab"] will be dict of [key]vocab_term: {definition, notes}
+                        # terms will be a tuple of (vocab_term, {definition, notes})
+                        terms = vt["vocab"].items()
+                        for (term, dict_) in terms:
+                            # term will be a string (the vocab term)
+                            # dict_ will be dictionary dof definition and notes
+                            terms_list.append(term)  # key will be a string
+                border()
+                bubble_sort(terms_list)
 
             case 'add-unit':
                 if argc <= 1:
