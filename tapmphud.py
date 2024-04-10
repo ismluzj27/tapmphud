@@ -16,7 +16,7 @@ def border():
                 border_design1,
                 border_design2,
                 border_design3]
-    print(random.choice(borders))
+    print(random.choice(borders),"\n")
 
 
 # TODO: implement all asterisks
@@ -317,8 +317,8 @@ def read_from_file(filepath):
 def quiz(terms, definitions):
     loop = 1
     print("""You have entered the flashcard review system.
-          The flashcard review system will display a term or definition depending on what you would like.
-          Then once you feel you have the answer you may view the answer and see if you were correct.""")
+    The flashcard review system will display a term or definition depending on what you would like.
+    Then once you feel you have the answer you may view the answer and see if you were correct.""")
     border()
     print("""Possible inputs for this program:
     blank/press Enter - flip flashcard over
