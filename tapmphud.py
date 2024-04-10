@@ -180,7 +180,7 @@ def wd_get_unit():
     global working_dir
     # Same process as above function
     elements = working_dir.removeprefix(">").split('>')
-    if len(elements) < 1:
+    if len(elements) < 1 or elements[0] == '':
         # If workign directory is just ">",
         # the user has not yet entered into a unit
         print("Enter *into* a unit first")
