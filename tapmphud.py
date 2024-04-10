@@ -644,10 +644,11 @@ def main():
             case 'add-vterm':
                 if argc < 2:  # only 'add-vterm'
                     print("Improper usage- needs term name")
-                definition = rawinput(
-                    "--- Writing definition (type EOF to finish) ---")
-                notes = rawinput("--- Writing notes (type EOF to finish) ---")
-                add_vocab(join_tokens(args), definition, notes)
+                else:
+                    definition = rawinput(
+                        "--- Writing definition (type EOF to finish) ---")
+                    notes = rawinput("--- Writing notes (type EOF to finish) ---")
+                    add_vocab(join_tokens(args), definition, notes)
 
             case 'add-ncard':
                 add_ncard()
