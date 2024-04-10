@@ -573,7 +573,7 @@ def bubble_sort(list):
                 list[i] = list[i + 1]
                 list[i + 1] = temp
                 swap = True
-            else:
+            # else:
                 # print(list[i].lower(), "<", list[i + 1].lower())
     print("\n",list)
 
