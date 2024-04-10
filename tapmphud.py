@@ -358,6 +358,9 @@ for ku,vu in syllabus.items(): # iterate through units
 
 # Set the value of given key or index of dict or list respectively
 def setkey(keyorindex):
+    # abort if empty
+    if keyorindex is None or keyorindex.strip() == '':
+        return
     # define selected_obj as resolved working direcdtory
     selected_obj = resolve_wd()
     if isinstance(selected_obj, dict):  # dict
