@@ -22,7 +22,7 @@ def border():
 # TODO: implement all asterisks
 help = """exit - exit
 help - list commands
-*flashcard-review [unit] - Generate quiz based on syllabus
+flashcard-review [unit] - Generate quiz based on syllabus
 search [term] - Look for and show any matches to term within **your current directory**.
 *sort - bubble sort vocabulary alphabetically
 
@@ -369,8 +369,80 @@ def read_from_file(filepath):
         syllabus = json.load(file)
         print("Imported: " + str(syllabus))
 
-def quiz():
-    pass
+def quiz(terms, definitions):
+    loop = 1
+    print("""You have entered the flashcard review system.
+          The flashcard review system will display a term or definition depending on what you would like.
+          Then once you feel you have the answer you may view the answer and see if you were correct.""")
+    border()
+    print("""Possible inputs for this program:
+    blank/press Enter - flip flashcard over
+    e - move to the next term/definition
+    q - move to the previous term/definition
+    exit - exit the flashcard review system
+    """)
+    border()
+    study_choice = input("""Would you like to study the definitions or the terms? 
+    terms - display the terms flip to see definitions
+    definitions - display the definitions flip to see terms
+    Choose which one you would like to do: """)
+    border()
+    if study_choice.lower() == "terms":
+        flashcards = list(zip(terms, definitions))
+        random.shuffle(flashcards)
+        while loop == 1:
+            for term, definition in flashcards:
+                print("Term:", term)
+                input("Press Enter to reveal definition...")
+                print("Definition:", definition)
+                print()
+                choice = input("""Possible inputs for this program:
+                blank/press Enter - flip flashcard over
+                exit - exit the flashcard review system
+                r - reshuffle the terms
+                """)
+                if choice.lower() == 'r':
+                    print("You have chosen to reshuffle the terms.")
+                    break
+                elif choice.lower() == 'exit':
+                    loop = 0
+                    break
+                elif choice == "":
+                    pass
+                else:
+                    print("That is not a valid choice. Please try again")
+                return 1
+
+    elif study_choice.lower() == "definitions":
+        flashcards = list(zip(definitions, terms))
+        random.shuffle(flashcards)
+        while loop == 1:
+            for definitions, terms in flashcards:
+                print("Definition:", definitions)
+                input("Press Enter to reveal definition...")
+                print("Term:", terms)
+                print()
+                choice = input("""Possible inputs for this program:
+                blank/press Enter - flip flashcard over
+                exit - exit the flashcard review system
+                r - reshuffle the terms
+                """)
+                if choice.lower() == 'r':
+                    print("You have chosen to reshuffle the terms.")
+                    break
+                elif choice.lower() == 'exit':
+                    loop = 0
+                    break
+                elif choice == "":
+                    pass
+                else:
+                    print("That is not a valid choice. Please try again")
+                    return 1
+
+    else:
+        print("That is not a valid choice. Please try again")
+        return 1
+
 
 
 
@@ -441,6 +513,29 @@ def main():
             case 'add-ncard':
                 add_ncard()
 
+            case 'flashcard-review':
+                rerun = 0
+                definitions_list = []
+                terms_list = []
+                for ku, vu in syllabus.items():  # iterate through units
+                    for kt, vt in vu.items():  # iterate through topics
+                        # vt is a dict of {vocab, notecards} (see planning.txt for structure)
+                        # vt["vocab"] will be dict of [key]vocab_term: {definition, notes}
+                        # terms will be a tuple of (vocab_term, {definition, notes})
+                        terms = vt["vocab"].items()
+                        for (term, dict_) in terms:
+                            # term will be a string (the vocab term)
+                            # dict_ will be dictionary dof definition and notes
+                            definitions_list.append( dict_['definition'] ) # access definition
+                            terms_list.append( term ) # key will be a string
+                            # note from luzj: sorry about the nested dictionary hell ._.
+
+                rerun = quiz(terms_list, definitions_list)
+                if rerun == 1:
+                    quiz(terms_list, definitions_list)
+                else:
+                    pass
+
             case 'add-topic':
                 add_topic(join_tokens(args))
 
@@ -474,4 +569,6 @@ def main():
 
 
 if __name__ == '__main__':
+    main()
+else:
     main()
