@@ -20,37 +20,52 @@ def border():
 
 
 # TODO: implement all asterisks
-help = """
+help = """\033[34mThis is the help menu, all available commands that you can use are here. 
 
-exit - exit
-help - list commands
-flashcard-review [unit] - Generate quiz based on syllabus
-search [term] - Look for and show any matches to term within **your current directory**.
-sort - bubble sort vocabulary alphabetically
+The first category of commands is entitled \033[32m## Universal ##\033[0m: 
+\033[34mThese are the most common commands you will use.
 
-\033[32m## Navigation ##\033[0m
-pwd - print working directory
-ls - list all elements in working directory
-ls [element] - list all elements in specified list/dictionary
-read [key OR index] - print the value of a key/at index of list
-into [element] - select an element in current working directory
-outof - go up in the working directory into broader element
+The next category of commands is entitled \033[33m## Navigation ##\033[0m:
+\033[34mThese are uses to word your way through and around the syllabus which has been pre-made for your convenience.
+There is also a display demonstrating the structure of the syllabus.
 
-Syllabus structure:
+The following category of commands is entitled \033[35m## Modifying syllabus ##\033[0m:
+\033[34mAs the name suggests this will allow you to alter or add to the existing syllabus.
+
+The last category of commands is entitled \033[36m## Exporting and importing to file ##\033[0m:
+\033[34mThese commands allow you to make/load a file to/from your computer respectively.\033[0m
+
+
+\033[32m## Universal ##\033[0m
+\033[34m\033[4mexit\033[0m - exit
+\033[34m\033[4mhelp\033[0m - list commands
+\033[34m\033[4mflashcard-review [unit]\033[0m - Generate quiz based on syllabus
+\033[34m\033[4msearch [term]\033[0m - Look for and show any matches to term within **your current directory**.
+\033[34m\033[4msort\033[0m - bubble sort vocabulary alphabetically
+
+\033[33m## Navigation ##\033[0m
+\033[34m\033[4mpwd\033[0m - print working directory
+\033[34m\033[4mls\033[0m - list all elements in working directory
+\033[34m\033[4mls [element]\033[0m - list all elements in specified list/dictionary
+\033[34m\033[4mread [key OR index]\033[0m - print the value of a key/at index of list
+\033[34m\033[4minto [element]\033[0m - select an element in current working directory
+\033[34m\033[4moutof\033[0m - go up in the working directory into broader element
+
+\033[34mSyllabus structure:
 > Unit > Topic > Vocabulary
                > Notecards
 
-\033[32m## Modifying syllabus ##\033[0m
-add-vterm [term name] - add vocabulary term w/ def & notes (at working directory's topic)
-add-ncard (asks for user input) - add a notecard (at working directory's topic) 
-add-topic [topic name] - add a topic (at working directory's unit)
-add-unit [unit name] - Make an empty unit with name provided
-setkey [key/index] (asks for user input) - replace content at key or index with user input
-del [element name] - delete any key/dict/str. can be a unit, topic, vocab term, note, etc.
+\033[35m## Modifying syllabus ##\033[0m
+\033[34m\033[4madd-vterm [term name]\033[0m - add vocabulary term w/ def & notes (at working directory's topic)
+\033[34m\033[4madd-ncard (asks for user input)\033[0m - add a notecard (at working directory's topic) 
+\033[34m\033[4madd-topic [topic name]\033[0m - add a topic (at working directory's unit)
+\033[34m\033[4madd-unit [unit name]\033[0m - Make an empty unit with name provided
+\033[34m\033[4msetkey [key/index] (asks for user input)\033[0m - replace content at key or index with user input
+\033[34m\033[4mdel [element name]\033[0m - delete any key/dict/str. can be a unit, topic, vocab term, note, etc.
 
-\033[32m## Exporting and importing to file ##\033[0m
-write-file [filename] - Write current syllabus to the specified file (JSON format)
-load-file [filename] - Load syllabus from specified file (JSON format)"""  # * = NOT IMPLEMENTED
+\033[36m## Exporting and importing to file ##\033[0m
+\033[34m\033[4mwrite-file [filename]\033[0m - Write current syllabus to the specified file (JSON format)
+\033[34m\033[4mload-file [filename]\033[0m - Load syllabus from specified file (JSON format)"""  # * = NOT IMPLEMENTED
 
 syllabus = {
     'Python Basics': {  # unit
@@ -476,6 +491,7 @@ def main():
             '>', ' \033[32m→\033[0m ', -1) + " \033[32m%\033[0m ")
         args = uinput.split()  # Arguments (split by words)
         argc = len(args)  # number of elements
+        border()
         match args[0].lower():  # First token is command
             case 'exit':
                 running = False
