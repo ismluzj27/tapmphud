@@ -180,7 +180,7 @@ def wd_get_unit():
     global working_dir
     # Same process as above function
     elements = working_dir.removeprefix(">").split('>')
-    if len(elements) < 1:
+    if len(elements) < 1 or elements[0] == '':
         # If workign directory is just ">",
         # the user has not yet entered into a unit
         print("Enter *into* a unit first")
@@ -358,6 +358,9 @@ for ku,vu in syllabus.items(): # iterate through units
 
 # Set the value of given key or index of dict or list respectively
 def setkey(keyorindex):
+    # abort if empty
+    if keyorindex is None or keyorindex.strip() == '':
+        return
     # define selected_obj as resolved working direcdtory
     selected_obj = resolve_wd()
     if isinstance(selected_obj, dict):  # dict
@@ -638,10 +641,11 @@ def main():
             case 'add-vterm':
                 if argc < 2:  # only 'add-vterm'
                     print("Improper usage- needs term name")
-                definition = rawinput(
-                    "--- Writing definition (type EOF to finish) ---")
-                notes = rawinput("--- Writing notes (type EOF to finish) ---")
-                add_vocab(join_tokens(args), definition, notes)
+                else:
+                    definition = rawinput(
+                        "--- Writing definition (type EOF to finish) ---")
+                    notes = rawinput("--- Writing notes (type EOF to finish) ---")
+                    add_vocab(join_tokens(args), definition, notes)
 
             case 'add-ncard':
                 add_ncard()
