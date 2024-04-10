@@ -568,13 +568,13 @@ def bubble_sort(list):
         swap = False
         for i in range(len(list) - 1):
             if list[i].lower() > list[i + 1].lower():
-                print(list[i].lower(), ">", list[i + 1].lower())
+                # print(list[i].lower(), ">", list[i + 1].lower())
                 temp = list[i]
                 list[i] = list[i + 1]
                 list[i + 1] = temp
                 swap = True
             else:
-                print(list[i].lower(), "<", list[i + 1].lower())
+                # print(list[i].lower(), "<", list[i + 1].lower())
     print("\n",list)
 
 
