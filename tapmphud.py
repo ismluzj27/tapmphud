@@ -11,8 +11,9 @@ border_design1 = "-----<~~~~>-----<~~~~>-----<~~~~>-----<~~~~>-----<~~~~>-----"
 border_design2 = "-~-~-</^\\>-~-~-</^\\>-~-~-</^\\>-~-~-</^\\>-~-~-</^\\>-~-~-</^\\>"
 border_design3 = "---<<<~~~^^^~~~>>>------<<<~~~^^^~~~>>>------<<<~~~^^^~~~>>>---"
 
-def border():
-    borders = [border_design,
+
+def border():  # choose randomly between the borders and print
+    borders = [border_design,  # create a list of borders
                 border_design1,
                 border_design2,
                 border_design3]
@@ -67,6 +68,7 @@ The last category of commands is entitled \033[36m## Exporting and importing to 
 \033[34m\033[4mwrite-file [filename]\033[0m - Write current syllabus to the specified file (JSON format)
 \033[34m\033[4mload-file [filename]\033[0m - Load syllabus from specified file (JSON format)"""  # * = NOT IMPLEMENTED
 
+# SEE: planning.txt for structure.
 syllabus = {
     'Python Basics': {  # unit
         'Data Types': {  # topic
@@ -125,6 +127,7 @@ raw_input_prompt = """
 # returns the selected object
 # e.g. syllabus['7 Cities']
 
+# Return the object associated with the working directory.
 def resolve_wd():
     return resolve_dir(working_dir)
 
@@ -132,34 +135,54 @@ def resolve_wd():
 # e.g. given >Python Basics>Data Types"
 #   ...returns syllabus["Python Basics"]["Data Types"]
 def resolve_dir(str_):
+    # Start off at the syllabus object.
     selected = syllabus
     # discard first '>' to avoid first split being ""
     strx = str_.removeprefix(">")
     if strx == '':
+        # If the working directory is just ">",
+        # return the syllabus object.
         return syllabus
+    # For each term separated by '>',
     for i, v in enumerate(strx.split('>')):
+        # if the term is found within the selected object,
         if v in selected:
+            # move into the object and continue the loop.
             selected = selected[v]
         else:
+            # If not found... print following message and return object.
             print(f"Element {v} not found-- stopping resolve")
             return selected
+
+    # Return the final object.
     return selected
 
 # Extract the topic from the working directory (a string).
 def wd_get_topic():
+    # Let interpreter know that `working_dir` is found globally
     global working_dir
     # >unit>topic
+    # Get the topic from the current working directory.
+    # The topic will be the 2nd term (index 1) split by '>'.
+    # Split the string by '>'.
     elements = working_dir.removeprefix(">").split('>')
     if len(elements) < 2:
+        # If there is only one term e.g. ">Python Basics",
+        # the user has not entered a topic first.
         print("Enter *into* a topic first")
         return
+    # Resolve and return the topic object
     return syllabus[elements[0]][elements[1]]
 
 # Gets the unit from the working directory
 def wd_get_unit():
+    # Let interpreter know that `working_dir` is found globally
     global working_dir
+    # Same process as above function
     elements = working_dir.removeprefix(">").split('>')
     if len(elements) < 1:
+        # If workign directory is just ">",
+        # the user has not yet entered into a unit
         print("Enter *into* a unit first")
         return
     return syllabus[elements[0]]
@@ -168,9 +191,15 @@ def wd_get_unit():
 # SEE: planning.txt for example of a structure of a topic.
 # use working dir's topic
 def add_vocab(vocab, definition, notes):
+    # Resolve topic
     topic = wd_get_topic()
+    # If topic is None, return None
     if topic is None:
         return
+    # SEE: planning.txt for structure
+    # Enter "vocab" dictionary of topic and
+    # set the vocab term's definition and notes to
+    # parameters provided.
     topic['vocab'][vocab] = {
         'definition': definition,
         'notes': notes
@@ -179,22 +208,37 @@ def add_vocab(vocab, definition, notes):
 # Add a notecard to the topic's notecard list.
 # use working dir's topic
 def add_ncard():
+    # Same as function above
     topic = wd_get_topic()
     if topic is None:
         return
+    # Call rawinput function:
+    # continuously get input from user for multiple lines
+    # until EOF is typed.
     input = rawinput("Writing a new note"+raw_input_prompt)
+    # If input is not empty
     if not input == '':
+        # add the input to the list of notecards.
         topic['notecards'].append(input)
 
 # use working dir's unit
 # Add a topic to the current unit.
 def add_topic(topic_name: str):
+    # Get working directory's unit
     unit = wd_get_unit()
+    # Abort if unit is None
     if unit is None:
         return
+    # If the current topic name exists
     if topic_name in unit:
+        # Tell the user that the topic already exists and abort.
         print("Warning: topic name already exists in unit. Aborting")
         return
+    # CONTROL FLOW:
+    # This code will only be reached if the above if statement
+    # is false due to its return statement.
+    # Add a topic w/ specified name with correct structure
+    # SEE: planning.txt
     unit[topic_name] = {
         'vocab': {},
         'notecards': []
@@ -203,27 +247,45 @@ def add_topic(topic_name: str):
 
 # Resolve element at path and delete it.
 def del_elem(element: str):
+    # Tell intepreter that working_dir is global
     global working_dir
+    # Resolve working directory
     dir = resolve_wd()
+    # If the element is a list,
     if element.isnumeric() and isinstance(dir, list):
+        # convert element to an integer index
         element = int(element)  # convert to index if dir is a list
-    if (element in dir) if isinstance(dir, dict) else (element >= 0 
+    # Depending on the type of object selected...
+    # If...
+    #   element is in the wd (working dir.) IF wd is dictionary
+    #   element index is within bounds      IF wd is list...
+    if (element in dir) if isinstance(dir, dict) else (element >= 0
                                                        and element < len(dir)):
+        # Delete element (either index of list or key of dictionary)
         print(f"Deleting {element} in {working_dir}")
         del dir[element]
     else:
+        # Else, tell user that element is not found.
         print("Element not found")
 
 
-# select and "enter" element from working directory
+# select and "enter" into element from working directory
 def wd_into(element: str):
     global working_dir
+    # if the destination exists...
     if element in resolve_wd():
+        # Get the destination object and determine
+        # if the destination can be entered into.
+        # (has children objects: list or dict)
+        # (can't be just a string)
         if isinstance(resolve_wd()[element], (list, dict)):
+            # Append destination to working directory
             working_dir += ">" + element
         else:
+            # Tell user that element can't be entered into.
             print("Element is not a list or dictionary")
     else:
+        # Tell user element does not exist.
         print(f"Element {element} does not exist")
 
 # Move *out of* the current element and into the one that contains it.
@@ -236,6 +298,12 @@ def wd_outof():
     # if len(elements) < 2: # Units can now be exited
     #     print("Cannot get out of " + elements[0])
     #     return
+
+    # Split working dir. by '>' and
+    # remove the last term to effectively
+    # get out of the current place into the containing object
+    # e.g. ">Python Basics>Data Types"
+    # to   ">Python Basics"
     del elements[len(elements) - 1]
     working_dir = ""
     for i, v in enumerate(elements):
@@ -245,12 +313,18 @@ def wd_outof():
 # concatenates all but first token with spaces in between
 def join_tokens(args):
     element_str = ""
+    # run through list of arguments
     for i, v in enumerate(args):
+        # skip first argument (the cmd name)
         if i == 0:
             continue
+        # add argument to the string
         element_str += v
+        # if not last argument, add a space inbetween
+        # ^ (to prevent trailing spaces)
         if i < len(args)-1:
             element_str += " "
+    # return element_str
     return element_str
 
 # Get user input
@@ -258,11 +332,17 @@ def rawinput(prompt):
     print(prompt)
     str_ = ""
     try:
+        # Keep getting user input, multiple lines,
+        # until user types "EOF"
         for line in stdin:
             if line == "EOF\n":
+                # if user types in "EOF"
+                # return string WITHOUT adding the "EOF" text
                 return str_
+            # append line to string
             str_ += line  # line includes trailing \n
 
+    # stop if ^D
     except EOFError:
         return str_
 
@@ -278,41 +358,54 @@ for ku,vu in syllabus.items(): # iterate through units
 
 # Set the value of given key or index of dict or list respectively
 def setkey(keyorindex):
+    # define selected_obj as resolved working direcdtory
     selected_obj = resolve_wd()
     if isinstance(selected_obj, dict):  # dict
+        # If the key does not exist... warn user
         if keyorindex not in selected_obj:
             print("WARNING: making new key, structure may be compromised")
+        # If key exists but is a dictionary or list, warn user
         if keyorindex in selected_obj and isinstance(selected_obj[keyorindex],
                                                      (list, dict)):
             print("WARNING: current value to be replaced has more" +
                   " nested information ")
-
+        # Get user input as a string
         inputstr = rawinput(f"Writing to key {keyorindex}"+raw_input_prompt)
         if inputstr is None or inputstr == '':
+            # Cancel if empty
             print("Cancelling")
             return
+        # Set key of dictionary to the user's input.
         selected_obj[keyorindex] = inputstr
     elif isinstance(selected_obj, list):  # list
+        # If user did not provide a number, tell and abort
         if not keyorindex.isnumeric():
             print("non-number provided")
             return
+        # Get index as a number from user input
         index = int(keyorindex)
+        # Check index to be in bounds, if not, abort.
         if index < 0 or index > len(selected_obj):
             print("invalid index")
             return
-
+        # Set the index at list to be the user input.
         inputstr = rawinput(
             f"Writing to index {index} of {len(selected_obj)}"+raw_input_prompt)
         if inputstr is None or inputstr == '':
             print("Cancelling")
             return
-        # index is just one higher than the greatest existing index
+        # If index is just one higher than the greatest existing index,
+        # append the user input to the list.
+        # else, just set the object at index to be input string.
         if index == len(selected_obj):
             selected_obj.append(inputstr)
         else:
             selected_obj[index] = inputstr
 
     else:
+        # (should not happen: wd should always be at a list or dict)
+        # (items that have children: see wd_into())
+        # warn user regardless of this issue.
         print("working directory is not at a list or dictionary")
 
 # Print the element and its contents in a formatted way
@@ -329,7 +422,7 @@ def show(element):
     if isinstance(element, list):
         print("list:")
         for i, v in enumerate(element):
-            # substring [start:end(not included]
+            # substring [start:end(not included)]
             print(f" [{i}] {v[0:10]}... [str]")
     elif isinstance(element, dict):
         print("dict:")
@@ -352,7 +445,7 @@ def search_in_item(item, term: str):
             # the printing will be handled by the previous recursion step
         return False
 
-    for k,v in enumerate(item) if isinstance(item, list) else item.items():
+    for k, v in enumerate(item) if isinstance(item, list) else item.items():
         prev_search_dir = current_search_dir  # make backup of current search directory
         # add key to current search directory
         # so deeper recursions of this function will know where we are currently at
@@ -376,15 +469,18 @@ working_dir = ">"
 # search_in_item(syllabus, "boolean")
 working_dir = pre_test_wd
 
+
 def write_to_file(filepath):
     with open(filepath, 'w') as file:
         file.write(json.dumps(syllabus))
+
 
 def read_from_file(filepath):
     global syllabus
     with open(filepath, 'r') as file:
         syllabus = json.load(file)
         print("Imported: " + str(syllabus))
+
 
 def quiz(terms, definitions):
     loop = 1
@@ -405,9 +501,13 @@ def quiz(terms, definitions):
     Choose which one you would like to do: """)
     border()
     if study_choice.lower() == "terms":
+        # Put the parallel lists together using zip()
+        # into a list of tuples.
         flashcards = list(zip(terms, definitions))
         random.shuffle(flashcards)
+        # While the study session should keep going...
         while loop == 1:
+            # Iterate through tuple of term and definition
             for term, definition in flashcards:
                 print("Term:", term)
                 input("Press Enter to reveal definition...")
@@ -418,12 +518,13 @@ def quiz(terms, definitions):
                 blank/press Enter - flip flashcard over
                 exit - exit the flashcard review system
                 r - reshuffle the terms
-                """)
+                """) 
+                # action depending on user input
                 if choice.lower() == 'r':
                     print("You have chosen to reshuffle the terms.")
                     break
                 elif choice.lower() == 'exit':
-                    loop = 0
+                    loop = 0  # stop looping
                     break
                 elif choice == "":
                     pass
@@ -476,15 +577,17 @@ def bubble_sort(list):
                 print(list[i].lower(), "<", list[i + 1].lower())
     print("\n",list)
 
+
 def main():
     global working_dir
     global current_search_dir
     running = True
+    # color escape sequence: [32m -- green, [0m -- reset
     print("\033[32mWelcome to the TAPMPHUD Syllabus Manager\n" +
           "Type 'help' and press Enter to list all commands.\033[0m")
     while running:  # while program should run
         border()
-        # color all >'s grey with terminal color escape sequence
+        # color all >'s green with terminal color escape sequence
         # (0m to reset color)
         # Get user input with the prompt
         uinput = input(working_dir.replace(
@@ -510,27 +613,32 @@ def main():
 
                 if isinstance(selected, (dict, list)):
                     show(selected)
-                else:
+                else:  # if the working directory is not a dictionary or list.
                     print("!!!Working directory object invalid type!!!")
                     print(working_dir)
 
             case 'read':
+                # read key of dictionary or list using show()
                 input_str = join_tokens(args)
                 selected = None
+                # empty string
                 if input_str == '':
                     print("Invalid command usage: needs key")
                 if input_str.isnumeric() and isinstance(resolve_wd(), list):
+                    # check list index validity
                     if int(input_str) < 0 or int(input_str) >= len(resolve_wd()):
                         print("Invalid index")
                     else:
                         selected = resolve_wd()[int(input_str)]
                 else:
+                    # check dict key validity
                     selected = resolve_wd()[
                         input_str] if input_str in resolve_wd() else "Key not found"
 
                 show(selected)
 
             case 'setkey':
+                # see: join_tokens(args)
                 setkey(join_tokens(args))
 
             case 'add-vterm':
