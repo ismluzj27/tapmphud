@@ -52,7 +52,7 @@ The last category of commands is entitled \033[36m## Exporting and importing to 
 \033[34m\033[4minto [element]\033[0m - select an element in current working directory
 \033[34m\033[4moutof\033[0m - go up in the working directory into broader element
 
-\033[34mSyllabus structure:
+\033[0mSyllabus structure:
 > Unit > Topic > Vocabulary
                > Notecards
 
