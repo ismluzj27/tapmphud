@@ -40,7 +40,7 @@ The last category of commands is entitled \033[36m## Exporting and importing to 
 \033[32m## Universal ##\033[0m
 \033[34m\033[4mexit\033[0m - exit
 \033[34m\033[4mhelp\033[0m - list commands
-\033[34m\033[4mflashcard-review [unit]\033[0m - Generate quiz based on syllabus
+\033[34m\033[4mflashcard-review\033[0m - Generate quiz based on syllabus
 \033[34m\033[4msearch [term]\033[0m - Look for and show any matches to term within **your current directory**.
 \033[34m\033[4msort\033[0m - bubble sort vocabulary alphabetically
 
@@ -457,10 +457,10 @@ def search_in_item(item, term: str):
         # print(f"{current_search_dir}, {result}")
         if result or keyresult:
             # print("\nprev: " + prev_search_dir + "\ncurr: " + current_search_dir)'
-            print(f"\nMatch term \"{term}\": {current_search_dir}") # print current match's directory
-            if result: # don't print value if only key and NOT VALUE matches.
+            ucsd = current_search_dir.replace('>', ' \033[32m→\033[0m ', -1)
+            print(f"\nMatch term \"{term}\": {ucsd}")  # print current match's directory
+            if result:  # don't print value if only key and NOT VALUE matches.
                 show(v)
-        # revert (remove key from current search directory) after looking at / through value.
         current_search_dir = prev_search_dir
 
 
@@ -487,14 +487,11 @@ def quiz(terms, definitions):
     print("""You have entered the flashcard review system.
     The flashcard review system will display a term or definition depending on what you would like.
     Then once you feel you have the answer you may view the answer and see if you were correct.""")
-    border()
     print("""Possible inputs for this program:
     blank/press Enter - flip flashcard over
-    e - move to the next term/definition
-    q - move to the previous term/definition
     exit - exit the flashcard review system
+    r - reshuffle the terms
     """)
-    border()
     study_choice = input("""Would you like to study the definitions or the terms? 
     terms - display the terms flip to see definitions
     definitions - display the definitions flip to see terms
@@ -510,54 +507,51 @@ def quiz(terms, definitions):
             # Iterate through tuple of term and definition
             for term, definition in flashcards:
                 print("Term:", term)
-                input("Press Enter to reveal definition...")
-                border()
+                input("Press Enter to reveal definition...\n")
                 print("Term:", term)
                 print("Definition:", definition)
-                choice = input("""Possible inputs for this program:
-                blank/press Enter - flip flashcard over
-                exit - exit the flashcard review system
-                r - reshuffle the terms
-                """) 
-                # action depending on user input
-                if choice.lower() == 'r':
-                    print("You have chosen to reshuffle the terms.")
+                choice = input("""continue?
+1 - yes
+2 - no
+choose: """)
+                if choice.lower() == '1':
+                    border()
+                    continue
+                elif choice.lower() == '2':
+                    loop = 0
                     break
-                elif choice.lower() == 'exit':
-                    loop = 0  # stop looping
-                    break
-                elif choice == "":
-                    pass
                 else:
                     print("That is not a valid choice. Please try again")
                 return 1
+            loop = 0
 
     elif study_choice.lower() == "definitions":
+        # Put the parallel lists together using zip()
+        # into a list of tuples.
         flashcards = list(zip(definitions, terms))
         random.shuffle(flashcards)
+        # While the study session should keep going...
         while loop == 1:
+            # Iterate through tuple of term and definition
             for definitions, terms in flashcards:
                 print("Definition:", definitions)
-                input("Press Enter to reveal definition...")
-                print("Term:", terms)
-                print()
-                choice = input("""Possible inputs for this program:
-                blank/press Enter - flip flashcard over
-                exit - exit the flashcard review system
-                r - reshuffle the terms
-                """)
-                if choice.lower() == 'r':
-                    print("You have chosen to reshuffle the terms.")
-                    break
-                elif choice.lower() == 'exit':
+                input("Press Enter to reveal definition...\n")
+                print("Definition:", definitions)
+                print("terms:", terms)
+                choice = input("""continue?
+1 - yes
+2 - no
+choose: """)
+                if choice.lower() == '1':
+                    border()
+                    continue
+                elif choice.lower() == '2':
                     loop = 0
                     break
-                elif choice == "":
-                    pass
                 else:
                     print("That is not a valid choice. Please try again")
-                    return 1
-
+                return 1
+            loop = 0
     else:
         print("That is not a valid choice. Please try again")
         return 1
@@ -601,7 +595,7 @@ def main():
             case 'help':
                 print(help)
             case 'pwd':  # Print where you are now
-                print(working_dir)
+                print("This is your current location:\n", working_dir.replace('>', ' \033[32m→\033[0m ', -1))
             case 'outof':  # Moving to the large file
                 wd_outof()
             case 'ls':
@@ -691,7 +685,6 @@ def main():
                             # term will be a string (the vocab term)
                             # dict_ will be dictionary dof definition and notes
                             terms_list.append(term)  # key will be a string
-                border()
                 bubble_sort(terms_list)
 
             case 'add-unit':
